@@ -1,0 +1,41 @@
+name: Auto-Merge AI Fixes
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  test-and-merge:
+    runs-on: ubuntu-latest
+    # Condição: Executar apenas se o PR for da branch de auto-fix
+    if: startsWith(github.head_ref, 'fix/sentry-issue-')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          # Precisamos fazer o checkout do código do PR
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Auto Merge
+        if: success() # Executa apenas se os passos anteriores (testes) foram bem-sucedidos
+        uses: pascalgn/automerge-action@v0.15.6
+        with:
+          # O token padrão do GitHub Actions tem as permissões necessárias
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_METHOD: "squash"
+          MERGE_LABELS: "" # Não exigir nenhuma label para o merge
+          MERGE_REMOVE_LABELS: ""
+          MERGE_DELETE_BRANCH: "true"

@@ -1,0 +1,62 @@
+commit a3415da089e900ca2ed99e8ce7c7467f02932428
+Merge: b8921e2 75f1428
+Author: garotopvp <rinaldopedroso@gmail.com>
+Date:   Tue Mar 10 14:07:34 2026 -0300
+
+    Merge from origin main
+
+commit b8921e25f5af3e1ac12c2703e078fea7fbc43f31
+Author: garotopvp <rinaldopedroso@gmail.com>
+Date:   Tue Mar 10 13:54:54 2026 -0300
+
+    fix(calculadora): remove dark hover on table rows and add interactive splits
+
+commit 7e9f2b17ba482cc07d15b18c209fe574d10d3659
+Author: garotopvp <rinaldopedroso@gmail.com>
+Date:   Mon Mar 9 12:47:35 2026 -0300
+
+    dawdad
+
+commit 04d842bfdbb0b3d3b59207cdaef3b8d3f1c03de8
+Author: garotopvp <rinaldopedroso@gmail.com>
+Date:   Sat Mar 7 23:56:31 2026 -0300
+
+    feat: adiciona a p??gina inicial completa com suas se????es principais e layout base.
+
+commit 75f14287aa4bfe6a6501814e7387d85386baa910
+Author: garotopvp <rinaldopedroso@gmail.com>
+Date:   Sat Mar 7 21:10:46 2026 -0300
+
+    feat: add live_site.html and commit_diff.txt
+
+commit 98a1e586dcc54cd86aa309228d63c66df4a1d474
+Author: garotopvp <rinaldopedroso@gmail.com>
+Date:   Sat Mar 7 18:30:05 2026 -0300
+
+    Inicio
+
+commit d1d77c5d296793062b3ef42d456d2a4d4b6c07d5
+Author: garotopvp <rinaldopedroso@gmail.com>
+Date:   Sat Mar 7 16:09:17 2026 -0300
+
+    feat: Implementa a configura????o central do site, componentes da p??gina inicial, SEO, integra????o WhatsApp e guia de replica????o.
+
+commit 696898a83ac71d36405dd1614d16da337be50198
+Author: garotopvp <rinaldopedroso@gmail.com>
+Date:   Sat Mar 7 12:17:27 2026 -0300
+
+    feat: adiciona componente PlansPieChart para visualizar a distribui????o de planos e a previs??o de receita mensal no painel de administra????o.
+
+commit 0b95b02aa349a36daa0eaaa64185168e138275c1
+Author: garotopvp <rinaldopedroso@gmail.com>
+Date:   Fri Mar 6 18:32:08 2026 -0300
+
+    feat: Automa????o de baixas de assinaturas, c??lculo de ciclo de cobran??a e corre????es visuais no painel administrativo
+    
+    - Implementa????o de baixa autom??tica de faturas ao lan??ar receita manual e atualiza????o de status para 'active'.\n- C??lculo inteligente de 'next_billing_date' baseado no ciclo do plano (Mensal, Trimestral, Semestral ou Anual).\n- Simplifica????o de r??tulos de exporta????o (Excel/PDF) e categorias financeiras.\n- Corre????o de exibi????o de valores brutos nos gr??ficos (remo????o de multiplicador de ciclo).\n- Ajuste na legibilidade do donut chart removendo sobreposi????o transparente.
+
+commit 476959954164edcf05768832c940b561412606e2
+Author: garotopvp <rinaldopedroso@gmail.com>
+Date:   Fri Mar 6 18:26:47 2026 -0300
+
+    feat: implementar componentes do painel administrativo para distribui????o de planos de assinatura, previs??o de faturamento mensal e gest??o financeira.

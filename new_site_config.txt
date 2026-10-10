@@ -1,0 +1,45 @@
+/**
+ * Central configuration for the site.
+ * Use this file to customize the branding, contact info, and other site-wide settings.
+ * This helps in white-labeling the application for different clients.
+ */
+
+export const SITE_CONFIG = {
+  name: "Bora Correr Club",
+  shortName: "BCC",
+  description: "O Sistema Operacional da Assessoria. Treine, evolua e conquiste seus objetivos com a Bora Correr.",
+  
+  // Contact Information
+  contacts: {
+    whatsapp: "5511910543632", // Formato: c??digo pa??s + DDD + n??mero (sem espa??os ou tra??os)
+    email: "suporte@boracorrer.com",
+    instagram: "@boracorrerclub",
+    address: "Campo de Marte, S??o Paulo - SP",
+  },
+
+  // Visual Assets
+  branding: {
+    logo: "/logo.png",
+    favicon: "/favicon.ico",
+    primaryColor: "#FF007F", // Electric Pink
+    secondaryColor: "#0A0A0A", // Obsidian
+  },
+
+  // Social/SEO
+  seo: {
+    titleTemplate: "%s | Bora Correr Club",
+    defaultTitle: "Bora Correr Club - Assessoria de Corrida",
+    twitterHandle: "@boracorrerclub",
+    siteUrl: "https://boracorrer.club",
+  },
+
+  // Features Flag (Optional - to enable/disable specific modules)
+  features: {
+    shop: true,
+    knowledgeBase: true,
+    events: true,
+    consulting: true,
+  }
+};
+
+export type SiteConfig = typeof SITE_CONFIG;

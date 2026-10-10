@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Consultoria de corrida baseada em dados e equipamento técnico premium. Junte-se a 60+ alunos ativos. Santos, SP."
+    />
+    <meta
+      name="keywords"
+      content="assessoria corrida, consultoria running, equipamento técnico, planilha personalizada, Santos"
+    />
+    <meta name="author" content="Superação Assessoria Esportiva" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://superacaoassessoria.com/" />
+    <meta property="og:title" content="Superação Assessoria Esportiva" />
+    <meta
+      property="og:description"
+      content="Treine com quem entende de performance. Consultoria personalizada, resultados reais."
+    />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="Superação Assessoria Esportiva" />
+
+    <title>Superação Assessoria Esportiva</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Prevent ReferenceError from old cached bundles referencing `orderId` as a global
+         and attempt to unregister any Service Workers + clear caches so clients get fresh bundles. -->
+    <script>
+      (function () {
+        try {
+          if (typeof window !== "undefined") window.orderId = window.orderId ?? null;
+
+          if ("serviceWorker" in navigator) {
+            // Unregister existing service workers (will stop serving old cached files)
+            navigator.serviceWorker
+              .getRegistrations()
+              .then(function (regs) {
+                regs.forEach(function (r) {
+                  try {
+                    r.unregister();
+                  } catch (e) {}
+                });
+              })
+              .catch(() => {});
+          }
+
+          // Clear runtime caches created by Workbox/PWA if possible
+          if (window.caches && window.caches.keys) {
+            window.caches
+              .keys()
+              .then(function (names) {
+                return Promise.all(
+                  names.map(function (name) {
+                    return window.caches.delete(name);
+                  })
+                );
+              })
+              .catch(() => {});
+          }
+        } catch (e) {
+          // don't break page
+          console.error("SW cleanup failed", e);
+        }
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

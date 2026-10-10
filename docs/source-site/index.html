@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Consultoria de corrida baseada em dados e equipamento técnico premium. Junte-se a 200+ atletas de elite. Santos, SP."
+    />
+    <meta
+      name="keywords"
+      content="assessoria corrida, consultoria running, equipamento técnico, planilha personalizada, Santos"
+    />
+    <meta name="author" content="Bora Correr Club" />
+    <meta name="theme-color" content="#0A0A0A" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://boracorrerclub.com/" />
+    <meta property="og:title" content="Bora Correr Club — Sua Melhor Versão" />
+    <meta
+      property="og:description"
+      content="Treine com quem entende de corrida. Consultoria personalizada, equipamento técnico e comunidade de elite."
+    />
+    <meta property="og:image" content="https://boracorrerclub.com/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://boracorrerclub.com/" />
+    <meta property="twitter:title" content="Bora Correr Club — Sua Melhor Versão" />
+    <meta
+      property="twitter:description"
+      content="Performance. Sem distrações. Consultoria baseada em dados e equipamento técnico premium."
+    />
+    <meta property="twitter:image" content="https://boracorrerclub.com/og-image.jpg" />
+
+    <title>Bora Correr Club — Sua Melhor Versão</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/performance.css" />
+  </head>
+  <body>
+    <!-- Skip to main content (acessibilidade) -->
+    <a href="#main-content" class="skip-to-main">Pular para o conteúdo principal</a>
+
+    <!-- HEADER (Sticky) -->
+    <header class="site-header">
+      <div class="container header-content">
+        <div class="logo">BORA CORRER CLUB</div>
+        <nav class="main-nav" id="mainNav">
+          <a href="#home">HOME</a>
+          <a href="consultoria.html">CONSULTORIA</a>
+          <a href="roupas.html">ROUPAS</a>
+          <a href="#comunidade">COMUNIDADE</a>
+          <a href="#conhecimento">CONHECIMENTO</a>
+          <a href="#sobre">SOBRE</a>
+        </nav>
+        <div class="header-actions">
+          <button class="icon-btn" aria-label="Buscar">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5" />
+              <path d="M14 14L19 19" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </button>
+
+          <!-- Área de Login -->
+          <div id="userMenuArea" style="display: none">
+            <button class="icon-btn" id="userMenuBtn" aria-label="Minha Conta">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M10 10a4 4 0 100-8 4 4 0 000 8zM3 18a7 7 0 1114 0"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </button>
+          </div>
+          <a
+            href="login.html"
+            id="loginLink"
+            class="icon-btn"
+            aria-label="Login"
+            style="text-decoration: none; font-size: 0.875rem; font-weight: 600"
+            >ENTRAR</a
+          >
+
+          <button class="icon-btn" id="cart-button" aria-label="Carrinho">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 5h11m0-5v5m0 0a2 2 0 104 0 2 2 0 00-4 0zm-11 0a2 2 0 104 0 2 2 0 00-4 0z"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+            </svg>
+            <span class="badge" id="cart-count">0</span>
+          </button>
+          <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO SECTION (Full Height) -->
+    <section class="hero-section" id="home">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1 class="hero-title text-shadow">SUA MELHOR<br />VERSÃO</h1>
+        <p class="hero-subtitle text-shadow">Treine com quem entende de corrida.</p>
+        <div class="hero-cta">
+          <a href="consultoria.html" class="btn btn-primary">VER PLANOS</a>
+          <a href="#roupas" class="btn btn-outline">EXPLORAR ROUPAS</a>
+        </div>
+      </div>
+      <div class="scroll-indicator" aria-label="Rolar para baixo">↓</div>
+    </section>
+
+    <!-- SISTEMA BORA CORRER (Explicativo) -->
+    <section class="sistema-section" id="main-content">
+      <div class="container">
+        <h2 class="section-title fade-in">NÃO É SOBRE VOLUME.<br />É SOBRE PRECISÃO.</h2>
+        <div class="stats-bar fade-in" data-delay="200">
+          <div class="stat-item">
+            <span class="stat-number" data-count="200">0</span>+
+            <span class="stat-label">Atletas Ativos</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="15000">0</span>+
+            <span class="stat-label">KM Percorridos/Mês</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="97">0</span>%
+            <span class="stat-label">Satisfação</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="6">0</span> anos
+            <span class="stat-label">De Experiência</span>
+          </div>
+        </div>
+        <div class="pilares-grid">
+          <article class="pilar-card fade-in" data-delay="300">
+            <div class="pilar-number">01</div>
+            <h3>CONSULTORIA BASEADA EM DADOS</h3>
+            <p>
+              Planilhas personalizadas com análise biomecânica e acompanhamento contínuo via app.
+            </p>
+          </article>
+          <article class="pilar-card fade-in" data-delay="400">
+            <div class="pilar-number">02</div>
+            <h3>ROUPAS TÉCNICAS</h3>
+            <p>Tecidos desenvolvidos para termorregulação e performance em condições extremas.</p>
+          </article>
+          <article class="pilar-card fade-in" data-delay="500">
+            <div class="pilar-number">03</div>
+            <h3>COMUNIDADE DE ELITE</h3>
+            <p>200+ atletas. Treinos em grupo. Eventos exclusivos. Leaderboards.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROUPAS EM DESTAQUE -->
+    <section class="equipamento-section" id="roupas">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title fade-in">ROUPAS EM DESTAQUE</h2>
+          <div style="display: flex; gap: 1rem; align-items: center">
+            <a href="roupas.html" class="link-arrow fade-in" data-delay="100">Ver tudo →</a>
+            <a href="login.html" class="btn btn-tertiary fade-in" data-delay="120">Entrar</a>
+          </div>
+        </div>
+        <div class="products-grid" id="productsGrid">
+          <!-- Produtos serão inseridos via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- PLANOS DE CONSULTORIA -->
+    <section class="planos-section">
+      <div class="container">
+        <h2 class="section-title">PLANOS DE CONSULTORIA</h2>
+        <div class="planos-grid">
+          <article class="plano-card featured">
+            <div class="badge-destaque">MAIS POPULAR</div>
+            <div class="plano-header">
+              <h3>ANUAL</h3>
+              <p class="plano-price">R$ 109<span>,97/mês</span></p>
+              <p class="plano-desc">Compromisso total com sua performance.</p>
+            </div>
+            <ul class="plano-features">
+              <li>✓ Acesso ao aplicativo SisRUNNER</li>
+              <li>✓ Treinos Presenciais</li>
+              <li>✓ Suporte direto com Coach</li>
+              <li>✓ Acesso à Comunidade</li>
+              <li>✓ <strong>Camiseta Exclusiva do Clube</strong></li>
+            </ul>
+            <a href="consultoria.html" class="btn btn-primary">ACESSAR O SISTEMA</a>
+          </article>
+          <article class="plano-card">
+            <div class="plano-header">
+              <h3>SEMESTRAL</h3>
+              <p class="plano-price">R$ 129<span>,97/mês</span></p>
+              <p class="plano-desc">Mais economia e a camiseta do clube.</p>
+            </div>
+            <ul class="plano-features">
+              <li>✓ Acesso ao aplicativo SisRUNNER</li>
+              <li>✓ Treinos Presenciais</li>
+              <li>✓ Suporte direto com Coach</li>
+              <li>✓ Acesso à Comunidade</li>
+            </ul>
+            <a href="consultoria.html" class="btn btn-secondary">OTIMIZAR AGORA</a>
+          </article>
+          <article class="plano-card">
+            <div class="plano-header">
+              <h3>TRIMESTRAL</h3>
+              <p class="plano-price">R$ 139<span>,97/mês</span></p>
+              <p class="plano-desc">Um bom começo para um compromisso firme.</p>
+            </div>
+            <ul class="plano-features">
+              <li>✓ Acesso ao aplicativo SisRUNNER</li>
+              <li>✓ Treinos Presenciais</li>
+              <li>✓ Suporte direto com Coach</li>
+              <li>✓ Acesso à Comunidade</li>
+            </ul>
+            <a href="consultoria.html" class="btn btn-secondary">INICIAR CONSULTORIA</a>
+          </article>
+          <article class="plano-card">
+            <div class="plano-header">
+              <h3>MENSAL</h3>
+              <p class="plano-price">R$ 149<span>,97/mês</span></p>
+              <p class="plano-desc">Flexibilidade para o seu dia a dia.</p>
+            </div>
+            <ul class="plano-features">
+              <li>✓ Acesso ao aplicativo SisRUNNER</li>
+              <li>✓ Treinos Presenciais</li>
+              <li>✓ Suporte direto com Coach</li>
+              <li>✓ Acesso à Comunidade</li>
+            </ul>
+            <a href="consultoria.html" class="btn btn-secondary">INICIAR CONSULTORIA</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEPOIMENTOS -->
+    <section class="depoimentos-section">
+      <div class="container">
+        <h2 class="section-title">O QUE DIZEM OS ATLETAS</h2>
+        <div class="depoimentos-grid">
+          <article class="depoimento-card">
+            <div class="stars">★★★★★</div>
+            <p class="depoimento-text">
+              "Comecei correndo 5k em 28 minutos. Depois de 4 meses seguindo a planilha do Coach,
+              fechei em 19:45. A diferença é treinar com consistência e progressão — não é só sair
+              correndo. Os treinos intervalados fizeram toda a diferença."
+            </p>
+            <div class="depoimento-autor">
+              <div class="autor-avatar">MR</div>
+              <div>
+                <p class="autor-nome">Marcelo Ribeiro</p>
+                <p class="autor-cargo">5K em 19:45 • 34 anos</p>
+              </div>
+            </div>
+          </article>
+          <article class="depoimento-card">
+            <div class="stars">★★★★★</div>
+            <p class="depoimento-text">
+              "Meu pace estava travado em 8min/km há mais de 1 ano. Com o acompanhamento semanal e
+              ajustes na periodização, hoje rodo confortável em 6min/km. O segredo foi entender que
+              volume sem qualidade não resolve — precisei treinar menos, mas melhor."
+            </p>
+            <div class="depoimento-autor">
+              <div class="autor-avatar">AP</div>
+              <div>
+                <p class="autor-nome">Ana Paula Vieira</p>
+                <p class="autor-cargo">De 8min/km para 6min/km • 41 anos</p>
+              </div>
+            </div>
+          </article>
+          <article class="depoimento-card">
+            <div class="stars">★★★★★</div>
+            <p class="depoimento-text">
+              "Corri minha primeira meia maratona em 2h15, mas queria baixar de 2h. O Bora Correr me
+              ajudou a estruturar os longões e regenerativos da forma certa. Resultado: 1h52 na Meia
+              de Santos. A comunidade também motiva muito — treinar em grupo faz diferença."
+            </p>
+            <div class="depoimento-autor">
+              <div class="autor-avatar">TL</div>
+              <div>
+                <p class="autor-nome">Thiago Lima</p>
+                <p class="autor-cargo">21K em 1h52 • 37 anos</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONHECIMENTO -->
+    <section class="conhecimento-section" id="conhecimento">
+      <div class="container">
+        <h2 class="section-title">CONHECIMENTO</h2>
+        <div class="artigos-grid">
+          <article class="artigo-card">
+            <div
+              class="artigo-img"
+              style="background-image: url(https://via.placeholder.com/600x400.png?text=Artigo+1)"
+            ></div>
+            <div class="artigo-content">
+              <span class="artigo-tag">TREINO</span>
+              <h3>Como estruturar microciclos para maratonas</h3>
+              <p>A periodização correta pode reduzir o risco de lesões em até 40%.</p>
+              <a href="#" class="link-arrow">Ler mais →</a>
+            </div>
+          </article>
+          <article class="artigo-card">
+            <div
+              class="artigo-img"
+              style="background-image: url(https://via.placeholder.com/600x400.png?text=Artigo+2)"
+            ></div>
+            <div class="artigo-content">
+              <span class="artigo-tag">EQUIPAMENTO</span>
+              <h3>A ciência por trás do Strideflow Y®</h3>
+              <p>Tecido 40% mais leve com termorregulação avançada.</p>
+              <a href="#" class="link-arrow">Ler mais →</a>
+            </div>
+          </article>
+          <article class="artigo-card">
+            <div
+              class="artigo-img"
+              style="background-image: url(https://via.placeholder.com/600x400.png?text=Artigo+3)"
+            ></div>
+            <div class="artigo-content">
+              <span class="artigo-tag">PERFORMANCE</span>
+              <h3>Análise biomecânica: vale a pena?</h3>
+              <p>Estudos mostram melhoria de 3-7% na economia de corrida.</p>
+              <a href="#" class="link-arrow">Ler mais →</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="cta-final-section">
+      <div class="container">
+        <h2 class="cta-final-title">PRONTO PARA TRANSFORMAR?</h2>
+        <p class="cta-final-subtitle">
+          Junte-se a 200+ atletas que já evoluíram com o sistema Bora Correr.
+        </p>
+        <a href="consultoria.html" class="btn btn-primary btn-lg">ACESSAR O SISTEMA AGORA</a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer" id="sobre">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-col">
+            <h4 class="footer-title">BORA CORRER CLUB</h4>
+            <p class="footer-desc">Assessoria de corrida em Santos focada em resultados reais.</p>
+            <div class="footer-social">
+              <a href="#" class="social-link">Instagram</a>
+              <a href="#" class="social-link">Facebook</a>
+              <a href="#" class="social-link">WhatsApp</a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h5 class="footer-heading">NAVEGAÇÃO</h5>
+            <ul class="footer-links">
+              <li><a href="#home">Home</a></li>
+              <li><a href="consultoria.html">Consultoria</a></li>
+              <li><a href="roupas.html">Roupas</a></li>
+              <li><a href="#sobre">Sobre</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5 class="footer-heading">CONTATO</h5>
+            <ul class="footer-contact">
+              <li>Santos, SP</li>
+              <li>contato@boracorrerclub.com</li>
+              <li>(13) 99999-9999</li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h5 class="footer-heading">HORÁRIOS</h5>
+            <p class="footer-schedule">
+              Segunda a Sexta: 6h - 20h<br />
+              Sábado: 7h - 12h<br />
+              Domingo: Treinos em grupo
+            </p>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; 2026 Bora Correr Club. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- CART MODAL -->
+    <div id="cart-modal" class="cart-modal" aria-hidden="true">
+      <div class="cart-backdrop" onclick="toggleCart()"></div>
+      <div class="cart-content">
+        <div class="cart-header">
+          <h3>SEU CARRINHO</h3>
+          <button class="close-btn" onclick="toggleCart()">✕</button>
+        </div>
+        <div class="cart-items" id="cart-list"></div>
+        <div class="cart-footer">
+          <div class="cart-total">
+            <span>TOTAL</span>
+            <span class="total-value">R$ <span id="cart-total">0,00</span></span>
+          </div>
+          <button id="checkoutBtn" class="btn btn-primary btn-full">FINALIZAR PEDIDO</button>
+          <button onclick="toggleCart()" class="btn btn-outline btn-full">
+            CONTINUAR COMPRANDO
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stripe JS -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="js/app.js"></script>
+    <script src="js/stripe-checkout.js"></script>
+    <script>
+      // Carregar imagem de capa do hero
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const res = await fetch("/api/hero-image/home");
+          if (res.ok) {
+            const data = await res.json();
+            if (data.url) {
+              const heroSection = document.querySelector(".hero-section");
+              if (heroSection) {
+                heroSection.style.setProperty(
+                  "background-image",
+                  `url('${data.url}')`,
+                  "important"
+                );
+                heroSection.style.backgroundSize = "cover";
+                heroSection.style.backgroundPosition = data.position || "center center";
+              }
+            }
+          }
+        } catch (e) {
+          console.error("Erro ao carregar imagem de capa:", e);
+        }
+      });
+    </script>
+  </body>
+</html>

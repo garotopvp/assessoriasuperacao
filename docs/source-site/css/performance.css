@@ -1,0 +1,100 @@
+/* MELHORIAS DE PERFORMANCE E ACESSIBILIDADE */
+
+/* Lazy Loading Images */
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* Focus Visible (melhor navegação por teclado) */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--electric-pink);
+  outline-offset: 2px;
+}
+
+/* Smooth Scrolling para navegação */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Respeitar preferência de animações do usuário */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .fade-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Skip to main content (acessibilidade) */
+.skip-to-main {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--electric-pink);
+  color: var(--white);
+  padding: 0.75rem 1rem;
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  z-index: 9999;
+  transition: top 0.3s ease;
+}
+
+.skip-to-main:focus {
+  top: 0;
+}
+
+/* Melhor contraste para texto sobre imagens */
+.text-shadow {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Print styles */
+@media print {
+  .site-header,
+  .cart-modal,
+  .hamburger,
+  .hero-cta,
+  .cta-final-section,
+  .newsletter-form,
+  .social-links {
+    display: none !important;
+  }
+
+  body {
+    color: #000;
+    background: #fff;
+  }
+
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  .section-title {
+    page-break-after: avoid;
+  }
+
+  .product-card,
+  .plano-card,
+  .depoimento-card {
+    page-break-inside: avoid;
+  }
+}

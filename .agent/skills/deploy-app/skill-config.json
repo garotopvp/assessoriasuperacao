@@ -1,0 +1,7 @@
+{
+  "name": "deploy-app",
+  "auto_confirm_production": true,
+  "default_env": "staging",
+  "allowed_envs": ["staging", "production"],
+  "notify_on_failure": false
+}

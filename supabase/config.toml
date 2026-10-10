@@ -1,0 +1,169 @@
+project_id = "fkrtampiolypntqzjxrm"
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+[functions.send-order-email]
+verify_jwt = false
+
+[functions.abacate-webhook]
+verify_jwt = false
+
+[functions.create-consultoria-checkout]
+verify_jwt = false
+
+[functions.customer-portal]
+verify_jwt = false
+
+[functions.check-subscription]
+verify_jwt = false
+
+[functions.send-subscription-email]
+verify_jwt = false
+
+[functions.configure-cron-manual]
+verify_jwt = false
+[functions.create-infinitepay-link]
+enabled = true
+verify_jwt = true
+import_map = "./functions/create-infinitepay-link/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/create-infinitepay-link/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/create-infinitepay-link/*.html" ]
+
+[functions.infinitepay-webhook]
+enabled = true
+verify_jwt = true
+import_map = "./functions/infinitepay-webhook/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/infinitepay-webhook/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/infinitepay-webhook/*.html" ]
+
+[functions.create-pix-abacate]
+verify_jwt = false
+
+[functions.manage-users]
+verify_jwt = false
+
+[functions.openpix-webhook]
+verify_jwt = false
+
+[functions.create-openpix-charge]
+verify_jwt = false
+
+[functions.create-stripe-order]
+verify_jwt = false
+
+[functions.create-stripe-subscription]
+verify_jwt = false
+
+[functions.resend-webhook]
+enabled = true
+verify_jwt = true
+import_map = "./functions/resend-webhook/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/resend-webhook/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/resend-webhook/*.html" ]
+
+[functions.signup-student]
+enabled = true
+verify_jwt = true
+import_map = "./functions/signup-student/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/signup-student/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/signup-student/*.html" ]
+
+[functions.zapi-webhook]
+verify_jwt = false
+
+[functions.send-feedback-reminders]
+verify_jwt = false
+
+[functions.notify-system-alerts]
+enabled = true
+verify_jwt = true
+import_map = "./functions/notify-system-alerts/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/notify-system-alerts/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/notify-system-alerts/*.html" ]
+
+[functions.send-test-message]
+enabled = true
+verify_jwt = true
+import_map = "./functions/send-test-message/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/send-test-message/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/send-test-message/*.html" ]
+
+[functions.send-whatsapp-message]
+enabled = true
+verify_jwt = true
+import_map = "./functions/send-whatsapp-message/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/send-whatsapp-message/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/send-whatsapp-message/*.html" ]
+
+[functions.sisrun-callback]
+enabled = true
+verify_jwt = true
+import_map = "./functions/sisrun-callback/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/sisrun-callback/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/sisrun-callback/*.html" ]
+
+[functions.notify-system-alarms]
+enabled = true
+verify_jwt = true
+import_map = "./functions/notify-system-alarms/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/notify-system-alarms/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/notify-system-alarms/*.html" ]
+
+[functions.push-notifications]
+enabled = true
+verify_jwt = true
+import_map = "./functions/push-notifications/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/push-notifications/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/push-notifications/*.html" ]
+
+[functions.push-alert-email]
+enabled = true
+verify_jwt = true
+import_map = "./functions/push-alert-email/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/push-alert-email/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/push-alert-email/*.html" ]

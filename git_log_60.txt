@@ -1,0 +1,60 @@
+﻿a3415da Merge from origin main
+b8921e2 fix(calculadora): remove dark hover on table rows and add interactive splits
+7e9f2b1 dawdad
+04d842b feat: adiciona a p├ígina inicial completa com suas se├º├Áes principais e layout base.
+75f1428 feat: add live_site.html and commit_diff.txt
+98a1e58 Inicio
+d1d77c5 feat: Implementa a configura├º├úo central do site, componentes da p├ígina inicial, SEO, integra├º├úo WhatsApp e guia de replica├º├úo.
+696898a feat: adiciona componente PlansPieChart para visualizar a distribui├º├úo de planos e a previs├úo de receita mensal no painel de administra├º├úo.
+0b95b02 feat: Automa├º├úo de baixas de assinaturas, c├ílculo de ciclo de cobran├ºa e corre├º├Áes visuais no painel administrativo
+4769599 feat: implementar componentes do painel administrativo para distribui├º├úo de planos de assinatura, previs├úo de faturamento mensal e gest├úo financeira.
+1e71dab feat: add financial transaction history component with filtering, searching, and manual revenue entry with receipt upload.
+ef43a9f feat: Adiciona o componente PlansPieChart para exibir a distribui├º├úo de planos e a previs├úo de receita.
+3258807 feat: melhoria na previs├úo financeira e lan├ºamento manual de recebimentos com atualiza├º├úo autom├ítica de planos
+d5850ea feat: adiciona componente de gr├ífico de pizza para visualiza├º├úo de estat├¡sticas de planos no painel de administra├º├úo.
+c3a909a feat: adiciona componente `PlansPieChart` para visualizar estat├¡sticas de planos de assinatura, incluindo receita mensal e status.
+45aca82 feat: adiciona componente `PlansPieChart` para visualizar estat├¡sticas de planos de assinatura com receita mensal e filtragem por status.
+1902f12 feat: Adiciona o componente ExpensesManager para gerenciamento completo de despesas financeiras, incluindo CRUD, filtros, upload de comprovantes com IA e exporta├º├úo.
+87ba308 feat: Adiciona gerenciamento de despesas financeiras com an├ílise de recibos por IA, suporte a despesas recorrentes e funcionalidades de filtro e exporta├º├úo.
+e6e587e ajuste
+c053539 feat: Adiciona componente de hist├│rico de transa├º├Áes financeiras com filtros, gr├íficos, gerenciamento de receitas manuais, upload de recibos e an├ílise por IA.
+db927e5 feat: Cria a p├ígina do painel do professor com navega├º├úo e funcionalidades administrativas.
+b5b256e dwada
+3472c11 feat: Adiciona gest├úo de administradores e novas p├íginas para Professor e SisRun Portal.
+b37ed04 ssawd
+199008a feat: adiciona componente de gerenciamento de assinaturas recorrentes para administradores.
+204ea07 feat: Adiciona o componente PlansPieChart para visualizar a distribui├º├úo de planos de assinatura.
+fce648f feat: Adiciona componente de gerenciamento de assinaturas recorrentes para administradores.
+d283540 feat: Implementa o gerenciador de assinaturas no painel administrativo.
+cb40c2a feat: create SubscriptionsManager component to manage recurring subscriptions, including editing, filtering, and communication features.
+b95e6e1 feat: Adiciona componentes de visualiza├º├úo de estat├¡sticas e gerenciamento para planos de assinatura na ├írea de administra├º├úo.
+80dc6c8 feat: implement comprehensive expenses manager with AI receipt analysis, recurring payments, and transaction history.
+75d17f3 feat: Implementa sistema de gerenciamento financeiro para despesas, incluindo upload de recibos com IA e hist├│rico de transa├º├Áes.
+eea4e15 feat: Adiciona componentes de hist├│rico de transa├º├Áes e gerenciamento de despesas para finan├ºas.
+aebb2af feat: implementa gerenciamento de despesas e hist├│rico de transa├º├Áes na se├º├úo financeira do administrador.
+1b373a5 feat: adiciona a p├ígina de hist├│rico de transa├º├Áes financeiras com visualiza├º├úo, filtros e funcionalidade para adicionar receitas manuais com upload de recibos.
+1c9b0e4 feat: Adiciona dashboard financeiro para administra├º├úo com vis├úo geral de receitas, assinaturas e vendas, incluindo filtros e tabela de extrato.
+e4d678e feat: Adiciona componente de hist├│rico de transa├º├Áes financeiras com visualiza├º├úo, filtros e gest├úo de receitas.
+0870ef8 feat: adicionar painel financeiro com acompanhamento de receitas, KPIs e listagem de transa├º├Áes.
+d6285e8 feat: Adiciona componente de hist├│rico de transa├º├Áes e gest├úo de receitas para o painel de administra├º├úo.
+05d9c2f feat: Adiciona componente de hist├│rico de transa├º├Áes financeiras para administra├º├úo, incluindo listagem, filtros e gest├úo de receitas.
+764ea8b feat: Adiciona componente de hist├│rico de transa├º├Áes financeiras com filtros, entrada manual de receita e an├ílise de recibos por IA.
+7a01f57 feat: add TransactionHistory component to display and manage financial transactions, including orders, subscriptions, and manual revenues.
+7c6b350 feat: Adiciona componentes para hist├│rico de transa├º├Áes e gerenciamento de despesas na ├írea de finan├ºas do admin.
+0da7dbd feat: Adiciona gerenciamento de despesas com an├ílise de comprovantes por IA e hist├│rico de transa├º├Áes.
+320eb55 dawda
+bc6d820 feat: implementar sistema completo de gest├úo de despesas com an├ílise de recibos por IA e funcionalidade de despesas recorrentes.
+a0c2602 feat: implementa gerenciamento de despesas com an├ílise de recibos por IA e adiciona URL de recibo ├ás tabelas de receita e despesa.
+82deb90 feat: Adiciona gerenciamento de despesas com upload de comprovantes, an├ílise via IA e armazenamento no Supabase.
+5f7b266 feat: Adiciona script Python tempor├írio com dados brutos.
+5cfbf42 feat: Adiciona gerenciador de despesas financeiras com funcionalidades CRUD, filtros, importa├º├úo CSV e cria├º├úo de despesas multi-m├¬s.
+b7285f0 dwaawda
+578b63d feat: add web-push dependency and create keys.txt for push notification functionality.
+3f679e8 feat: adiciona p├ígina de administra├º├úo com painel de gest├úo e componente de notifica├º├Áes.
+0310d68 feat: Adiciona gerenciamento de despesas e atualiza configura├º├Áes de grupos do Z-API.
+fd61921 feat: Atualiza o token do cliente em test_zapi.mjs
+2349be6 feat: Add Client-Token header to Z-API request.
+a639e4b feat: Envia mensagem de teste para grupo espec├¡fico usando Z-API.
+aa21eaf feat: add ZAPI group IDs for teachers and notifications.
+1b26bca adwda
+328ce50 feat: Implementa a fun├º├úo Supabase `notify-system-alarms` para enviar notifica├º├Áes de sistema (cadastro, pagamento, falha) via WhatsApp.

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Relatório Ecossistema Bora Correr Club</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
+
+      body {
+        font-family: "Inter", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px;
+        background: #fff;
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: #111;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+      }
+
+      h1 {
+        font-size: 2.5em;
+        border-bottom: 2px solid #e91e63;
+        padding-bottom: 10px;
+        color: #e91e63;
+      }
+
+      h2 {
+        font-size: 1.8em;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+        margin-top: 40px;
+      }
+
+      blockquote {
+        background: #f9f9f9;
+        border-left: 5px solid #e91e63;
+        margin: 20px 0;
+        padding: 15px 20px;
+        font-style: italic;
+        color: #555;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      }
+
+      th,
+      td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #e91e63;
+        color: #ffffff;
+        font-weight: bold;
+      }
+
+      tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+      }
+
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      ul li {
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      ul li:before {
+        content: "•";
+        color: #e91e63;
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+      }
+
+      .mermaid {
+        background: #f4f4f4;
+        padding: 20px;
+        border-radius: 8px;
+        font-family: monospace;
+        white-space: pre;
+        overflow-x: auto;
+        font-size: 0.8em;
+        border: 1px solid #ddd;
+      }
+
+      .print-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #e91e63;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      @media print {
+        body {
+          padding: 0;
+          max-width: 100%;
+        }
+        .print-btn {
+          display: none;
+        }
+        h1 {
+          color: #000;
+          border-bottom-color: #000;
+        }
+        th {
+          background-color: #333 !important;
+          color: #fff !important;
+          -webkit-print-color-adjust: exact;
+        }
+        blockquote {
+          border-left-color: #333;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="print-btn" onclick="window.print()">🖨️ Salvar como PDF</button>
+
+    <h1>🚀 Bora Correr Club OS</h1>
+    <p>
+      <strong>Relatório de Estratégia e Valor Tecnológico</strong><br />
+      <em>Por que nossa estrutura tecnológica vale por uma equipe inteira.</em>
+    </p>
+
+    <blockquote>
+      <strong>Resumo Executivo:</strong> O que construímos não é apenas um "site". É um
+      <strong>Ecossistema de Gestão Automatizada</strong> que substitui o trabalho manual de
+      secretariado, financeiro e suporte nível 1. Enquanto uma estrutura "simples" depende de horas
+      humanas, nossa estrutura depende de robôs que trabalham 24/7.
+    </blockquote>
+
+    <h2>🧠 1. Mapa Mental do Ecossistema</h2>
+    <p>Imagine o sistema dividido em 4 grandes pilares que conversam entre si 24h por dia:</p>
+
+    <h3>A. O "Cérebro" (Supabase & Backend)</h3>
+    <p><em>É onde tudo fica guardado e onde as decisões são tomadas.</em></p>
+    <ul>
+      <li>
+        <strong>Banco de Dados Central:</strong> Guarda pagamentos, treinos, conversas e fichas de
+        saúde.
+      </li>
+      <li><strong>Segurança:</strong> Garante que só alunos ativos acessem o app.</li>
+      <li>
+        <strong>Regras de Negócio:</strong> Define inadimplência, cobrança de feedback e bloqueios.
+      </li>
+    </ul>
+
+    <h3>B. O "Concierge" 🤖 (Bot do WhatsApp)</h3>
+    <p><em>O funcionário que nunca dorme e atende instantaneamente.</em></p>
+    <ul>
+      <li>
+        <strong>Atendimento Inteligente:</strong> Ouve áudios, transcreve e detecta sentimento
+        negativo (insatisfação).
+      </li>
+      <li>
+        <strong>Check-in Automático:</strong> Valida presença via GPS (Raio de 300m da Praça).
+      </li>
+      <li>
+        <strong>Comandos Rápidos:</strong> <code>!planilha</code>, <code>!ranking</code>,
+        <code>!pix</code>.
+      </li>
+    </ul>
+
+    <h3>C. O "Gerente Proativo" 📢 (Automações)</h3>
+    <p><em>O sistema trabalha ativamente sem você mandar.</em></p>
+    <ul>
+      <li>
+        <strong>Cobrança de Feedback:</strong> Envia lembretes automáticos no sábado para garantir
+        dados para os treinos.
+      </li>
+      <li>
+        <strong>Recuperação de Vendas:</strong> Identifica quem desistiu no meio do cadastro e manda
+        mensagem para recuperar.
+      </li>
+    </ul>
+
+    <h3>D. O "Caixa" 💳 (Financeiro Automático)</h3>
+    <ul>
+      <li><strong>Múltiplos Gateways:</strong> Stripe, OpenPix, InfinitePay.</li>
+      <li>
+        <strong>Liberação Imediata:</strong> Pagou o PIX -> Acesso liberado no App em 5 segundos.
+      </li>
+    </ul>
+
+    <h2>⚖️ 2. Comparativo: Simples vs. Estruturado</h2>
+    <p>Aqui está o comparativo do custo real de operar no modelo manual versus o nosso sistema.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Funcionalidade</th>
+          <th>Modelo "Simples" (Manual)</th>
+          <th>Modelo Atual (Bora Correr OS)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Atendimento</strong></td>
+          <td>Humano (Lento, falho, horário comercial).</td>
+          <td><strong>Híbrido (Bot 24h + Humano na exceção).</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Venda de Camiseta</strong></td>
+          <td>15 min de conversa no WhatsApp. Controle manual.</td>
+          <td><strong>0 min.</strong> Aluno compra no site, estoque baixa sozinho.</td>
+        </tr>
+        <tr>
+          <td><strong>Inscrição Eventos</strong></td>
+          <td>Lista de chamada no grupo (caos).</td>
+          <td><strong>Painel Organizado</strong> com status de pagamento.</td>
+        </tr>
+        <tr>
+          <td><strong>Feedback de Treino</strong></td>
+          <td>"Me conta como foi" (Baixa adesão).</td>
+          <td><strong>Régua de Cobrança Automática</strong> (Alta adesão).</td>
+        </tr>
+        <tr>
+          <td><strong>Financeiro</strong></td>
+          <td>Conferência manual de comprovante PIX.</td>
+          <td><strong>Webhook Automático.</strong> Pagou, liberou.</td>
+        </tr>
+        <tr>
+          <td><strong>Escala</strong></td>
+          <td>Precisa de 1 funcionário a cada 50 alunos.</td>
+          <td><strong>Infinito.</strong> Atende 1.000 alunos com mesmo custo.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>💎 3. Funcionalidades Detalhadas (O que o Aluno Vê)</h2>
+
+    <h3>🛍️ Loja Virtual & Estoque</h3>
+    <ul>
+      <li><strong>Vitrine Online:</strong> O aluno vê fotos e tamanhos disponíveis.</li>
+      <li>
+        <strong>Baixa Automática:</strong> Comprou a última peça P? O site marca como "Esgotado" na
+        hora.
+      </li>
+      <li><strong>Histórico:</strong> Sabemos quem comprou o quê para ações futuras.</li>
+    </ul>
+
+    <h3>🏃‍♂️ Área do Aluno & Saúde</h3>
+    <ul>
+      <li>
+        <strong>Prontuário Digital:</strong> Ficha de Anamnese completa (lesões, cirurgias,
+        objetivos) acessível em 1 clique.
+      </li>
+      <li>
+        <strong>Central de Feedback:</strong> Histórico de evolução e dores do aluno para o
+        treinador consultar.
+      </li>
+    </ul>
+
+    <h3>🎫 Eventos & Parcerias</h3>
+    <ul>
+      <li>
+        <strong>Calendário de Provas:</strong> Inscrição em 1 clique para eventos da assessoria.
+      </li>
+      <li><strong>Clube de Vantagens:</strong> Área exclusiva com cupons de parceiros.</li>
+    </ul>
+
+    <h2>🏆 4. Conclusão Final</h2>
+    <blockquote>
+      A estrutura que criamos não é "complexidade", é <strong>liberdade</strong>.<br /><br />
+      Voltar para o modelo "simples" significa que os sócios terão que voltar a fazer trabalho
+      operacional:<br />
+      1. Conferir PIX na conta bancária todo dia.<br />
+      2. Responder "qual o valor?" no WhatsApp 50x por dia.<br />
+      3. Cobrar feedback um por um.<br />
+      4. Controlar estoque de camiseta na mão.<br /><br />
+      <strong
+        >O sistema trabalha operando a burocracia para que nós possamos focar no Treino, na
+        Estratégia e no Crescimento.</strong
+      >
+    </blockquote>
+  </body>
+</html>

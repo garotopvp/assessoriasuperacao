@@ -1,0 +1,18 @@
+// Adicione este console.log no início da função fetchOrders em OrdersManager.tsx
+
+console.log("🔍 [DEBUG] Buscando pedidos...");
+
+const { data: { session } } = await supabase.auth.getSession();
+console.log("👤 [DEBUG] Sessão:", session?.user?.email, session?.user?.id);
+
+const { data, error, count } = await supabase
+    .from("orders")
+    .select("*", { count: "exact" })
+    .order("created_at", { ascending: false });
+
+console.log("📊 [DEBUG] Resultado da query:", {
+    count,
+    totalItens: data?.length,
+    erro: error?.message,
+    dados: data
+});

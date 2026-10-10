@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Consultoria — Bora Correr Club</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/consultoria.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="container header-content">
+        <a href="index.html" class="logo">BORA CORRER CLUB</a>
+        <nav class="main-nav" id="mainNav">
+          <a href="index.html">HOME</a>
+          <a href="consultoria.html">CONSULTORIA</a>
+          <a href="roupas.html">ROUPAS</a>
+          <a href="index.html#comunidade">COMUNIDADE</a>
+          <a href="index.html#conhecimento">CONHECIMENTO</a>
+          <a href="index.html#sobre">SOBRE</a>
+        </nav>
+        <div class="header-actions">
+          <button class="icon-btn" aria-label="Buscar">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5" />
+              <path d="M14 14L19 19" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </button>
+          <button class="icon-btn" id="cart-button" aria-label="Carrinho">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 5h11m0-5v5m0 0a2 2 0 104 0 2 2 0 00-4 0zm-11 0a2 2 0 104 0 2 2 0 00-4 0z"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+            </svg>
+            <span class="badge" id="cart-count">0</span>
+          </button>
+          <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero-consultoria" id="consultoriaHero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">CONSULTORIA DE<br />PERFORMANCE</h1>
+        <p class="hero-subtitle">Baseada em dados. Personalizada. Contínua.</p>
+      </div>
+    </section>
+
+    <!-- O QUE VOCÊ RECEBE -->
+    <section class="beneficios-section">
+      <div class="container">
+        <h2 class="section-title">O QUE VOCÊ RECEBE</h2>
+        <div class="beneficios-grid">
+          <article class="beneficio-card">
+            <div class="beneficio-number">01</div>
+            <h3>PLANILHA PERSONALIZADA</h3>
+            <p>
+              Treinos estruturados com base no seu perfil, objetivos e disponibilidade. Ajustes
+              mensais conforme sua evolução.
+            </p>
+          </article>
+          <article class="beneficio-card">
+            <div class="beneficio-number">02</div>
+            <h3>ANÁLISE BIOMECÂNICA</h3>
+            <p>
+              Avaliação completa da sua técnica de corrida. Identificação de padrões de movimento e
+              prevenção de lesões.
+            </p>
+          </article>
+          <article class="beneficio-card">
+            <div class="beneficio-number">03</div>
+            <h3>ACOMPANHAMENTO CONTÍNUO</h3>
+            <p>
+              App SisRUNNER para registro de treinos. Feedback semanal e ajustes em tempo real via
+              WhatsApp.
+            </p>
+          </article>
+          <article class="beneficio-card">
+            <div class="beneficio-number">04</div>
+            <h3>COMUNIDADE DE ELITE</h3>
+            <p>
+              Treinos em grupo às terças e quintas. Acesso a eventos exclusivos e networking com
+              200+ atletas.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLANOS DETALHADOS -->
+    <section class="planos-detalhados-section">
+      <div class="container">
+        <h2 class="section-title">ESCOLHA SEU PLANO</h2>
+        <div class="planos-grid-full">
+          <article class="plano-card-full featured-full">
+            <div class="badge-destaque-full">MAIS POPULAR</div>
+            <div class="plano-header-full">
+              <h3>ANUAL</h3>
+              <div class="plano-price-full">
+                <span class="currency">R$</span>
+                <span class="valor">109</span>
+                <span class="centavos">,97/mês</span>
+              </div>
+              <p class="economia">Compromisso total com sua performance.</p>
+            </div>
+            <ul class="plano-features-full">
+              <li>✓ Acesso ao aplicativo SisRUNNER</li>
+              <li>✓ Treinos Presenciais</li>
+              <li>✓ Suporte direto com Coach</li>
+              <li>✓ Acesso à Comunidade</li>
+              <li>✓ <strong>Camiseta Exclusiva do Clube</strong></li>
+            </ul>
+            <button class="btn btn-primary btn-full" onclick="iniciarExploracao('anual')">
+              ACESSAR O SISTEMA
+            </button>
+          </article>
+
+          <article class="plano-card-full">
+            <div class="plano-header-full">
+              <h3>SEMESTRAL</h3>
+              <div class="plano-price-full">
+                <span class="currency">R$</span>
+                <span class="valor">129</span>
+                <span class="centavos">,97/mês</span>
+              </div>
+              <p class="economia">Mais economia e a camiseta do clube.</p>
+            </div>
+            <ul class="plano-features-full">
+              <li>✓ Acesso ao aplicativo SisRUNNER</li>
+              <li>✓ Treinos Presenciais</li>
+              <li>✓ Suporte direto com Coach</li>
+              <li>✓ Acesso à Comunidade</li>
+            </ul>
+            <button class="btn btn-primary btn-full" onclick="iniciarExploracao('semestral')">
+              OTIMIZAR AGORA
+            </button>
+          </article>
+
+          <article class="plano-card-full">
+            <div class="plano-header-full">
+              <h3>TRIMESTRAL</h3>
+              <div class="plano-price-full">
+                <span class="currency">R$</span>
+                <span class="valor">139</span>
+                <span class="centavos">,97/mês</span>
+              </div>
+              <p class="economia">Um bom começo para um compromisso firme.</p>
+            </div>
+            <ul class="plano-features-full">
+              <li>✓ Acesso ao aplicativo SisRUNNER</li>
+              <li>✓ Treinos Presenciais</li>
+              <li>✓ Suporte direto com Coach</li>
+              <li>✓ Acesso à Comunidade</li>
+            </ul>
+            <button class="btn btn-primary btn-full" onclick="iniciarExploracao('trimestral')">
+              INICIAR CONSULTORIA
+            </button>
+          </article>
+
+          <article class="plano-card-full">
+            <div class="plano-header-full">
+              <h3>MENSAL</h3>
+              <div class="plano-price-full">
+                <span class="currency">R$</span>
+                <span class="valor">149</span>
+                <span class="centavos">,97/mês</span>
+              </div>
+              <p class="economia">Flexibilidade para o seu dia a dia.</p>
+            </div>
+            <ul class="plano-features-full">
+              <li>✓ Acesso ao aplicativo SisRUNNER</li>
+              <li>✓ Treinos Presenciais</li>
+              <li>✓ Suporte direto com Coach</li>
+              <li>✓ Acesso à Comunidade</li>
+            </ul>
+            <button class="btn btn-primary btn-full" onclick="iniciarExploracao('mensal')">
+              INICIAR CONSULTORIA
+            </button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESSO DE ONBOARDING -->
+    <section class="onboarding-section">
+      <div class="container">
+        <h2 class="section-title">COMO FUNCIONA</h2>
+        <div class="timeline">
+          <article class="timeline-item">
+            <div class="timeline-number">01</div>
+            <div class="timeline-content">
+              <h3>INSCRIÇÃO</h3>
+              <p>
+                Preencha o formulário detalhado sobre seu histórico, objetivos e disponibilidade.
+              </p>
+            </div>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-number">02</div>
+            <div class="timeline-content">
+              <h3>AVALIAÇÃO</h3>
+              <p>
+                Análise completa do seu perfil. Teste de performance (presencial ou remoto) e
+                avaliação biomecânica.
+              </p>
+            </div>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-number">03</div>
+            <div class="timeline-content">
+              <h3>PLANILHA</h3>
+              <p>
+                Receba sua planilha personalizada em até 48h. Integração com o app SisRUNNER para
+                acompanhamento.
+              </p>
+            </div>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-number">04</div>
+            <div class="timeline-content">
+              <h3>OTIMIZAÇÃO</h3>
+              <p>
+                Feedback contínuo e ajustes conforme sua evolução. Análise semanal de performance.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+      <div class="container">
+        <h2 class="section-title">PERGUNTAS FREQUENTES</h2>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>Posso mudar de plano depois?</summary>
+            <p>
+              Sim! Você pode fazer upgrade ou downgrade a qualquer momento. Ajustamos o valor
+              proporcional.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Como funciona o teste de performance?</summary>
+            <p>
+              Para Santos e região, fazemos presencialmente. Para outras localidades, enviamos um
+              protocolo remoto com análise via vídeo.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>E se eu me lesionar?</summary>
+            <p>
+              Pausamos seu plano sem custo adicional. Quando voltar, retomamos de onde parou com
+              ajustes para reabilitação.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Qual a diferença entre os planos?</summary>
+            <p>
+              Todos incluem planilha personalizada. A partir do Trimestral, você ganha análise
+              biomecânica, ajustes ilimitados e benefícios extras como consultoria nutricional e
+              descontos.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Consigo cancelar quando quiser?</summary>
+            <p>
+              Sim. Todos os planos podem ser cancelados a qualquer momento. Não há multa ou taxa de
+              cancelamento.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="cta-final-section">
+      <div class="container">
+        <h2 class="cta-final-title">PRONTO PARA EVOLUIR?</h2>
+        <p class="cta-final-subtitle">
+          Junte-se a 200+ atletas que já transformaram sua performance.
+        </p>
+        <button class="btn btn-primary btn-lg" onclick="iniciarExploracao('trimestral')">
+          COMEÇAR AGORA
+        </button>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-col">
+            <h4>BORA CORRER CLUB</h4>
+            <p>Engineered for Endurance.<br />De Santos para o mundo.</p>
+          </div>
+          <div class="footer-col">
+            <h5>NAVEGAÇÃO</h5>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="consultoria.html">Consultoria</a></li>
+              <li><a href="index.html#roupas">Roupas</a></li>
+              <li><a href="index.html#comunidade">Comunidade</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h5>SUPORTE</h5>
+            <ul>
+              <li><a href="#">FAQ</a></li>
+              <li><a href="#">Envios</a></li>
+              <li><a href="#">Devoluções</a></li>
+              <li><a href="#">Contato</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h5>NEWSLETTER</h5>
+            <form class="newsletter-form">
+              <input type="email" placeholder="Seu email" required />
+              <button type="submit" class="btn btn-secondary">→</button>
+            </form>
+            <div class="social-links">
+              <a href="#" aria-label="Instagram">IG</a>
+              <a href="#" aria-label="YouTube">YT</a>
+              <a href="#" aria-label="Strava">ST</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2025 Bora Correr Club. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Stripe JS -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="js/app.js"></script>
+    <script src="js/consultoria.js"></script>
+    <script src="js/stripe-checkout.js"></script>
+    <script>
+      // Carregar imagem de capa
+      document.addEventListener("DOMContentLoaded", async () => {
+        const heroSection = document.getElementById("consultoriaHero");
+
+        try {
+          const res = await fetch("/api/hero-image/consultoria");
+          if (res.ok) {
+            const data = await res.json();
+            if (data.url) {
+              if (heroSection) {
+                heroSection.style.setProperty(
+                  "background-image",
+                  `url('${data.url}')`,
+                  "important"
+                );
+                heroSection.style.backgroundSize = "cover";
+                heroSection.style.backgroundPosition = data.position || "center center";
+              }
+            }
+          }
+        } catch (e) {
+          console.error("Erro ao carregar imagem de capa:", e);
+        }
+
+        // Aplicar classe loaded para fade-in suave (evita flash de imagem)
+        setTimeout(() => {
+          if (heroSection) heroSection.classList.add("loaded");
+        }, 100);
+      });
+    </script>
+  </body>
+</html>

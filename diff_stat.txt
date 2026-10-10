@@ -1,0 +1,10 @@
+ .env.example                             |  5 +++
+ docs/GUIA_REPLICACAO.md                  | 70 ++++++++++++++++++++++++++++++++
+ src/components/common/SEO.tsx            | 11 ++---
+ src/components/home/CTASection.tsx       |  3 +-
+ src/components/home/SobreSection.tsx     |  3 +-
+ src/components/layout/Footer.tsx         | 21 +++++-----
+ src/components/layout/WhatsAppButton.tsx |  5 ++-
+ src/config/site.ts                       | 45 ++++++++++++++++++++
+ src/pages/Index.tsx                      |  7 ++--
+ 9 files changed, 148 insertions(+), 22 deletions(-)

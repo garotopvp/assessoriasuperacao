@@ -1,0 +1,50 @@
+75f14287aa4bfe6a6501814e7387d85386baa910|Sat Mar 7 21:10:46 2026 -0300|feat: add live_site.html and commit_diff.txt
+d1d77c5d296793062b3ef42d456d2a4d4b6c07d5|Sat Mar 7 16:09:17 2026 -0300|feat: Implementa a configuração central do site, componentes da página inicial, SEO, integração WhatsApp e guia de replicação.
+696898a83ac71d36405dd1614d16da337be50198|Sat Mar 7 12:17:27 2026 -0300|feat: adiciona componente PlansPieChart para visualizar a distribuição de planos e a previsão de receita mensal no painel de administração.
+0b95b02aa349a36daa0eaaa64185168e138275c1|Fri Mar 6 18:32:08 2026 -0300|feat: Automação de baixas de assinaturas, cálculo de ciclo de cobrança e correções visuais no painel administrativo
+476959954164edcf05768832c940b561412606e2|Fri Mar 6 18:26:47 2026 -0300|feat: implementar componentes do painel administrativo para distribuição de planos de assinatura, previsão de faturamento mensal e gestão financeira.
+1e71dab5199bce2a254c8ddd9e591969cc8bc6aa|Fri Mar 6 18:16:56 2026 -0300|feat: add financial transaction history component with filtering, searching, and manual revenue entry with receipt upload.
+ef43a9f3623bc99ec2ce03a4660d3ca7d43f5cc6|Fri Mar 6 18:13:43 2026 -0300|feat: Adiciona o componente PlansPieChart para exibir a distribuição de planos e a previsão de receita.
+3258807df2f90feabc35206248ee62750b0841b1|Fri Mar 6 15:48:11 2026 -0300|feat: melhoria na previsão financeira e lançamento manual de recebimentos com atualização automática de planos
+d5850ea93ded9d2f16adf103e46a266a6df85591|Fri Mar 6 15:19:03 2026 -0300|feat: adiciona componente de gráfico de pizza para visualização de estatísticas de planos no painel de administração.
+c3a909ad43233957b9fed4ca32c181c495151a15|Fri Mar 6 13:24:18 2026 -0300|feat: adiciona componente `PlansPieChart` para visualizar estatísticas de planos de assinatura, incluindo receita mensal e status.
+45aca8292e5d3ec43e4c1b984276ef9f7a4742fc|Fri Mar 6 13:19:49 2026 -0300|feat: adiciona componente `PlansPieChart` para visualizar estatísticas de planos de assinatura com receita mensal e filtragem por status.
+1902f12c8a9d4625e89bc20e7929df7299e638fb|Fri Mar 6 12:47:36 2026 -0300|feat: Adiciona o componente ExpensesManager para gerenciamento completo de despesas financeiras, incluindo CRUD, filtros, upload de comprovantes com IA e exportação.
+87ba3087b984ac8b3efd78b856b7ac86c7282315|Fri Mar 6 12:15:46 2026 -0300|feat: Adiciona gerenciamento de despesas financeiras com análise de recibos por IA, suporte a despesas recorrentes e funcionalidades de filtro e exportação.
+e6e587efd5adee698d7f18e60d46c08c9fd6237f|Fri Mar 6 12:00:23 2026 -0300|ajuste
+c0535394bbdbf5d8b19a6adc367c75f3a8d5a8d7|Fri Mar 6 11:49:31 2026 -0300|feat: Adiciona componente de histórico de transações financeiras com filtros, gráficos, gerenciamento de receitas manuais, upload de recibos e análise por IA.
+db927e5eaede1d4d64693041632fa238745cd2bc|Thu Mar 5 17:36:57 2026 -0300|feat: Cria a página do painel do professor com navegação e funcionalidades administrativas.
+b5b256e9599bce461b384ee72fd5ce5ceb9fba51|Thu Mar 5 16:42:02 2026 -0300|dwada
+3472c11cccaab11d869c463659082f6d45f40058|Thu Mar 5 16:30:49 2026 -0300|feat: Adiciona gestão de administradores e novas páginas para Professor e SisRun Portal.
+b37ed0427dcdbadf41787f7dabb0bc64d27d9666|Thu Mar 5 16:26:08 2026 -0300|ssawd
+199008affe79bbcc327b299f928afaa09553645e|Tue Mar 3 17:28:19 2026 -0300|feat: adiciona componente de gerenciamento de assinaturas recorrentes para administradores.
+204ea079c6671cfa61db7437e10a86dce18dc0cd|Tue Mar 3 17:21:44 2026 -0300|feat: Adiciona o componente PlansPieChart para visualizar a distribuição de planos de assinatura.
+fce648fe0044f4253cdd410b6262b123f64d7676|Tue Mar 3 17:06:09 2026 -0300|feat: Adiciona componente de gerenciamento de assinaturas recorrentes para administradores.
+d2835409082985f93a9904860ed6c0a36dda5503|Tue Mar 3 16:58:39 2026 -0300|feat: Implementa o gerenciador de assinaturas no painel administrativo.
+cb40c2a2aa08a35dd48d6db78db3b666b5f87294|Tue Mar 3 16:52:14 2026 -0300|feat: create SubscriptionsManager component to manage recurring subscriptions, including editing, filtering, and communication features.
+b95e6e1c29635f15500daba33b9bf71ab78ecf21|Tue Mar 3 16:44:52 2026 -0300|feat: Adiciona componentes de visualização de estatísticas e gerenciamento para planos de assinatura na área de administração.
+80dc6c893454d21c1408ab28312dd341cae54e3b|Tue Mar 3 07:33:57 2026 -0300|feat: implement comprehensive expenses manager with AI receipt analysis, recurring payments, and transaction history.
+75d17f37b5249d2ef5dcc8455fb7fc87e473fe55|Sun Mar 1 23:47:34 2026 -0300|feat: Implementa sistema de gerenciamento financeiro para despesas, incluindo upload de recibos com IA e histórico de transações.
+eea4e15a82bebaa22f10a31c192581b3629ea064|Sun Mar 1 23:07:26 2026 -0300|feat: Adiciona componentes de histórico de transações e gerenciamento de despesas para finanças.
+aebb2af300798ee65252905865e8ccf2ee40a876|Sun Mar 1 22:56:54 2026 -0300|feat: implementa gerenciamento de despesas e histórico de transações na seção financeira do administrador.
+1b373a5f1772a040b86406590a6ad8e0f3c475fa|Sun Mar 1 22:44:46 2026 -0300|feat: adiciona a página de histórico de transações financeiras com visualização, filtros e funcionalidade para adicionar receitas manuais com upload de recibos.
+1c9b0e4fa361122218cf613d4bf26ec5d2518273|Sun Mar 1 22:26:22 2026 -0300|feat: Adiciona dashboard financeiro para administração com visão geral de receitas, assinaturas e vendas, incluindo filtros e tabela de extrato.
+e4d678ec7255c2d07d6d1fde072a6771aa4d3784|Sun Mar 1 22:23:15 2026 -0300|feat: Adiciona componente de histórico de transações financeiras com visualização, filtros e gestão de receitas.
+0870ef8a528259d83aa32327bb4680a4fd500a0f|Sun Mar 1 22:17:54 2026 -0300|feat: adicionar painel financeiro com acompanhamento de receitas, KPIs e listagem de transações.
+d6285e87f2e2e12d52a89fc3be4420a096364cca|Sun Mar 1 20:09:21 2026 -0300|feat: Adiciona componente de histórico de transações e gestão de receitas para o painel de administração.
+05d9c2f6c439e3b174fa8c03e61c841b67c32702|Sun Mar 1 19:20:16 2026 -0300|feat: Adiciona componente de histórico de transações financeiras para administração, incluindo listagem, filtros e gestão de receitas.
+764ea8b5e99df7604916ba9332b068a2f3dd83d3|Sun Mar 1 19:08:19 2026 -0300|feat: Adiciona componente de histórico de transações financeiras com filtros, entrada manual de receita e análise de recibos por IA.
+7a01f57c1a809220c6ca6b265b62bfab1a036bb3|Sun Mar 1 18:13:57 2026 -0300|feat: add TransactionHistory component to display and manage financial transactions, including orders, subscriptions, and manual revenues.
+7c6b35020fff2c89609ca650bb83a3c8461f10dc|Sun Mar 1 18:08:43 2026 -0300|feat: Adiciona componentes para histórico de transações e gerenciamento de despesas na área de finanças do admin.
+0da7dbd759d53853f19319d40c62c36b4144e781|Sun Mar 1 15:40:40 2026 -0300|feat: Adiciona gerenciamento de despesas com análise de comprovantes por IA e histórico de transações.
+320eb5567b63d07292b914a486749e54b84f426f|Sun Mar 1 15:30:15 2026 -0300|dawda
+bc6d820bded9709fc61e61add5ddf107bd08c3c7|Sun Mar 1 15:23:17 2026 -0300|feat: implementar sistema completo de gestão de despesas com análise de recibos por IA e funcionalidade de despesas recorrentes.
+a0c260255d6d3660ac251de04a5af25a58b3ec8e|Sun Mar 1 15:18:06 2026 -0300|feat: implementa gerenciamento de despesas com análise de recibos por IA e adiciona URL de recibo às tabelas de receita e despesa.
+82deb90f50d92a1a0138141b3b11ae3de7aa4359|Sun Mar 1 14:54:03 2026 -0300|feat: Adiciona gerenciamento de despesas com upload de comprovantes, análise via IA e armazenamento no Supabase.
+5f7b26652a0667fb583a80b0653a0bbbbe9a3381|Sun Mar 1 14:18:04 2026 -0300|feat: Adiciona script Python temporário com dados brutos.
+5cfbf424401de4a9060be6b3b803dccd7345e2c1|Sun Mar 1 13:20:59 2026 -0300|feat: Adiciona gerenciador de despesas financeiras com funcionalidades CRUD, filtros, importação CSV e criação de despesas multi-mês.
+b7285f0d410c7471b52514a43ddde8fc343eb918|Sun Mar 1 13:13:52 2026 -0300|dwaawda
+578b63d4c0408214489a1a2ba94b299011cd00ab|Sun Mar 1 00:52:22 2026 -0300|feat: add web-push dependency and create keys.txt for push notification functionality.
+3f679e8ddaae9b9283750baecfc55e530a7200e7|Sun Mar 1 00:27:34 2026 -0300|feat: adiciona página de administração com painel de gestão e componente de notificações.
+0310d68640edcd5b765f88022bd8fb20e7b7d2c0|Sat Feb 28 21:18:53 2026 -0300|feat: Adiciona gerenciamento de despesas e atualiza configurações de grupos do Z-API.
+fd619215940d983880c19540a1e51924418c957f|Sat Feb 28 21:17:56 2026 -0300|feat: Atualiza o token do cliente em test_zapi.mjs

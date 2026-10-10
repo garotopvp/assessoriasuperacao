@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["deno.window"],
+    "strict": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "checkJs": false,
+    "moduleResolution": "node",
+    "types": ["https://deno.land/x/deno@v1.36.0/cli/tsc/dts/lib.deno.d.ts"]
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules"]
+}

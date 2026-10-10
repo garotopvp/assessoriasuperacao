@@ -1,0 +1,17 @@
+﻿*   a3415da Merge from origin main
+|\  
+| * 75f1428 feat: add live_site.html and commit_diff.txt
+* | b8921e2 fix(calculadora): remove dark hover on table rows and add interactive splits
+* | 7e9f2b1 dawdad
+* | 04d842b feat: adiciona a p├ígina inicial completa com suas se├º├Áes principais e layout base.
+* | 98a1e58 Inicio
+|/  
+* d1d77c5 feat: Implementa a configura├º├úo central do site, componentes da p├ígina inicial, SEO, integra├º├úo WhatsApp e guia de replica├º├úo.
+* 696898a feat: adiciona componente PlansPieChart para visualizar a distribui├º├úo de planos e a previs├úo de receita mensal no painel de administra├º├úo.
+* 0b95b02 feat: Automa├º├úo de baixas de assinaturas, c├ílculo de ciclo de cobran├ºa e corre├º├Áes visuais no painel administrativo
+* 4769599 feat: implementar componentes do painel administrativo para distribui├º├úo de planos de assinatura, previs├úo de faturamento mensal e gest├úo financeira.
+* 1e71dab feat: add financial transaction history component with filtering, searching, and manual revenue entry with receipt upload.
+* ef43a9f feat: Adiciona o componente PlansPieChart para exibir a distribui├º├úo de planos e a previs├úo de receita.
+* 3258807 feat: melhoria na previs├úo financeira e lan├ºamento manual de recebimentos com atualiza├º├úo autom├ítica de planos
+* d5850ea feat: adiciona componente de gr├ífico de pizza para visualiza├º├úo de estat├¡sticas de planos no painel de administra├º├úo.
+* c3a909a feat: adiciona componente `PlansPieChart` para visualizar estat├¡sticas de planos de assinatura, incluindo receita mensal e status.

@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: sisrun-bot
+    runtime: docker
+    dockerfilePath: ./sisrun_bot/Dockerfile
+    dockerContext: ./sisrun_bot
+    plan: free
+    envVars:
+      - key: SISRUN_LOGIN
+        sync: false
+      - key: SISRUN_SENHA
+        sync: false
