@@ -3866,6 +3866,7 @@ function renderWorkoutComparison() {
 
     // Paces planejados por km para o gráfico e tabela
     const plannedKmsPace = [];
+    const plannedStepsPaces = [];
     if (Array.isArray(_editingCalendarWorkout.steps)) {
         _editingCalendarWorkout.steps.forEach(step => {
             const stepNorm = normalizeWorkoutStep(step);
@@ -3880,13 +3881,41 @@ function renderWorkoutComparison() {
                     }
                 }
             } else {
-                extractPacesFromStep(stepNorm, plannedKmsPace, athleteVam);
+                const stepKmPaces = [];
+                extractPacesFromStep(stepNorm, stepKmPaces, athleteVam);
+                plannedStepsPaces.push({
+                    step: stepNorm,
+                    paceMin: stepKmPaces[0] || targetPaceMin,
+                    kmCount: stepKmPaces.length
+                });
+                stepKmPaces.forEach(p => plannedKmsPace.push(p));
             }
         });
     }
 
     // Voltas/Fases reais
     const realSplits = wk.metrics?.splits || wk.splits || [];
+    
+    // Detecta se os splits foram gravados como blocos contínuos (ex: bloco de 5km de uma vez) ou voltas de 1km
+    const isMultiKmPhase = realSplits.some(s => s.distance && s.distance >= 1500);
+
+    // Mapeamento expandido para o gráfico cobrir todos os quilômetros (Km 1 ao Km N) sem interrupção
+    const expandedRealKmPaces = [];
+    if (isMultiKmPhase) {
+        realSplits.forEach(split => {
+            const distKm = Math.max(1, Math.round((split.distance || 1000) / 1000));
+            const splitPace = split.pace ? parsePaceToMinutes(split.pace) : (split.distance > 0 && split.moving_time ? (split.moving_time / (split.distance / 1000) / 60) : realPaceMin);
+            for (let k = 0; k < distKm; k++) {
+                expandedRealKmPaces.push(splitPace);
+            }
+        });
+    } else {
+        realSplits.forEach(split => {
+            const splitPace = split.pace ? parsePaceToMinutes(split.pace) : (split.distance > 0 && split.moving_time ? (split.moving_time / (split.distance / 1000) / 60) : realPaceMin);
+            expandedRealKmPaces.push(splitPace);
+        });
+    }
+
     let splitsTableHtml = '';
 
     if (realSplits.length > 0) {
@@ -3911,7 +3940,25 @@ function renderWorkoutComparison() {
             const splitDur = split.moving_time ? formatDurationFromMinutes(split.moving_time / 60) : (split.duration ? formatDurationFromMinutes(split.duration / 60) : '--');
             const splitPace = split.pace || (split.distance > 0 && split.moving_time ? formatDurationFromMinutes((split.moving_time / (split.distance / 1000)) / 60) + '/km' : '--');
             const splitPaceDecimal = parsePaceToMinutes(splitPace);
-            const plannedPaceDecimal = plannedKmsPace[index] || targetPaceMin || (athleteVam ? 60 / athleteVam : 5.0);
+
+            // Determinar o pace planejado correto correspondente a este bloco/etapa:
+            let plannedPaceDecimal = targetPaceMin;
+            if (isMultiKmPhase) {
+                if (plannedStepsPaces[index]) {
+                    plannedPaceDecimal = plannedStepsPaces[index].paceMin;
+                } else if (split.label && split.label.toLowerCase().includes('aquecimento')) {
+                    const wStep = plannedStepsPaces.find(p => p.step?.type === 'warmup');
+                    plannedPaceDecimal = wStep ? wStep.paceMin : (plannedStepsPaces[0]?.paceMin || targetPaceMin);
+                } else if (split.label && split.label.toLowerCase().includes('desaquecimento')) {
+                    const cStep = plannedStepsPaces.find(p => p.step?.type === 'cooldown');
+                    plannedPaceDecimal = cStep ? cStep.paceMin : (plannedStepsPaces[plannedStepsPaces.length - 1]?.paceMin || targetPaceMin);
+                } else {
+                    const rStep = plannedStepsPaces.find(p => p.step?.type === 'run');
+                    plannedPaceDecimal = rStep ? rStep.paceMin : targetPaceMin;
+                }
+            } else {
+                plannedPaceDecimal = plannedKmsPace[index] || targetPaceMin || (athleteVam ? 60 / athleteVam : 5.0);
+            }
             const plannedPaceFormatted = formatDurationFromMinutes(plannedPaceDecimal);
 
             const diffSecs = Math.round((splitPaceDecimal - plannedPaceDecimal) * 60);
@@ -3986,65 +4033,72 @@ function renderWorkoutComparison() {
             splitsTableHtml += '</tbody></table>';
         } else {
             splitsTableHtml = `
-                <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 600; border: 1.5px dashed var(--border-strong); border-radius: 8px;">
-                    <i class="ri-information-line" style="font-size: 18px; vertical-align: middle; margin-right: 4px;"></i> 
-                    Treino executado e registrado pelo relógio. Distância Real: ${realDist.toFixed(2)} km em ${realDur} min.
+                <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;">
+                    Nenhum detalhamento de parciais disponível para esta atividade.
                 </div>
             `;
         }
     }
 
     wrap.innerHTML = `
-        <!-- CARD DE ADERÊNCIA GERAL -->
-        <div style="display: flex; gap: 16px; align-items: stretch; margin-bottom: 20px;">
-            <div class="stat-card" style="flex: 1; display: flex; align-items: center; gap: 20px; background: linear-gradient(135deg, ${scoreColor}12 0%, ${scoreColor}04 100%); border: 1.5px solid ${scoreColor}30; margin: 0; padding: 20px; border-radius: 12px; box-shadow: none; width: 100%;">
-                <div style="position: relative; width: 84px; height: 84px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: white; box-shadow: 0 8px 20px rgba(0,0,0,0.05); flex-shrink: 0; border: 4px solid ${scoreColor};">
-                    <span style="font-size: 26px; font-weight: 900; color: ${scoreColor};">${matchScore}%</span>
+        <!-- CABEÇALHO COM SCORE DE ADERÊNCIA -->
+        <div class="stat-card" style="margin: 0 0 16px 0; padding: 20px; background: linear-gradient(135deg, ${scoreColor}10, ${scoreColor}03); border: 1px solid ${scoreColor}30; border-radius: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: gap: 14px;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="width: 58px; height: 58px; border-radius: 50%; background: ${scoreColor}; color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; box-shadow: 0 4px 14px ${scoreColor}40;">
+                        ${matchScore}%
+                    </div>
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--text);">${scoreText}</h3>
+                            <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; background: ${scoreColor}20; color: ${scoreColor}; padding: 2px 7px; border-radius: 4px;">Índice de Aderência</span>
+                        </div>
+                        <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--text-muted); font-weight: 500; max-width: 500px;">
+                            ${scoreDesc}
+                        </p>
+                    </div>
                 </div>
-                <div style="flex: 1;">
-                    <h4 style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin: 0 0 2px 0;">Índice de Aderência à Planilha</h4>
-                    <h3 style="font-size: 19px; font-weight: 900; color: ${scoreColor}; margin: 0 0 4px 0; letter-spacing: -0.5px;">${scoreText}</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin: 0; line-height: 1.4; font-weight: 500;">${scoreDesc}</p>
+                <div>
+                    ${sourceBadgeHtml}
                 </div>
-                ${sourceBadgeHtml}
             </div>
         </div>
 
-        <!-- CARDS COMPARATIVOS (VOLUME, TEMPO, PACE) -->
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+        <!-- CARDS COMPARATIVOS EXECUTIVOS (3 COLUNAS) -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px;">
             <div class="stat-card" style="margin: 0; padding: 14px 16px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
-                <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Volume (Distância)</div>
-                <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
-                    <div style="font-size: 22px; font-weight: 900; color: var(--text);">${realDist.toFixed(2)} km</div>
-                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Proposto: ${plannedDist.toFixed(1)} km</div>
+                <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+                    <span><i class="ri-map-pin-line" style="color: var(--primary);"></i> Distância Total</span>
+                    ${getBadge(distDiffPct)}
                 </div>
-                ${getBadge(distDiffPct)}
-            </div>
-            
-            <div class="stat-card" style="margin: 0; padding: 14px 16px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
-                <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Duração (Tempo)</div>
-                <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
-                    <div style="font-size: 22px; font-weight: 900; color: var(--text);">${realDur ? formatDurationFromMinutes(realDur) : '--'}</div>
-                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Proposto: ${plannedDur ? formatDurationFromMinutes(plannedDur) : '--'}</div>
-                </div>
-                ${getBadge(durDiffPct)}
+                <div style="font-size: 20px; font-weight: 900; color: var(--text);">${realDist ? realDist.toFixed(2) + ' km' : '--'}</div>
+                <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px;">Proposto: ${plannedDist ? plannedDist.toFixed(1) + ' km' : '--'}</div>
             </div>
 
             <div class="stat-card" style="margin: 0; padding: 14px 16px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
-                <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Pace Médio</div>
-                <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
-                    <div style="font-size: 22px; font-weight: 900; color: var(--text);">${realPaceStr || '--'}/km</div>
-                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Proposto: ${targetPaceStr || '--'}/km</div>
+                <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+                    <span><i class="ri-time-line" style="color: #f59e0b;"></i> Duração Total</span>
+                    ${getBadge(durDiffPct)}
                 </div>
-                ${getBadge(paceDiffPct, true)}
+                <div style="font-size: 20px; font-weight: 900; color: var(--text);">${realDur ? formatDurationFromMinutes(realDur) : (wk.metrics?.duration || '--')}</div>
+                <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px;">Proposto: ${plannedDur ? formatDurationFromMinutes(plannedDur) : '--'}</div>
+            </div>
+
+            <div class="stat-card" style="margin: 0; padding: 14px 16px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
+                <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+                    <span><i class="ri-speed-up-line" style="color: #10b981;"></i> Pace Médio</span>
+                    ${getBadge(paceDiffPct, true)}
+                </div>
+                <div style="font-size: 20px; font-weight: 900; color: var(--primary);">${realPaceStr || (realPaceMin ? formatDurationFromMinutes(realPaceMin) + '/km' : '--')}</div>
+                <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px;">Proposto: ${targetPaceStr ? targetPaceStr + '/km' : (targetPaceMin ? formatDurationFromMinutes(targetPaceMin) + '/km' : '--')}</div>
             </div>
         </div>
 
-        <!-- BIOMETRIA & DADOS DO RELÓGIO -->
+        <!-- TELEMETRIA BIOMÉTRICA DO RELÓGIO -->
         ${biometricsHtml}
 
         <!-- GRÁFICO COMPARATIVO DE RITMO -->
-        <div class="stat-card" style="margin: 0 0 20px 0; padding: 16px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
+        <div class="stat-card" style="margin: 0 0 16px 0; padding: 16px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
             <h4 style="font-size: 13px; font-weight: 800; color: var(--text); margin: 0 0 14px 0; display: flex; align-items: center; gap: 6px;">
                 <i class="ri-line-chart-line" style="color: var(--primary); font-size: 18px;"></i> Comparativo de Ritmo (Pace Planejado vs Real Executado)
             </h4>
@@ -4072,24 +4126,21 @@ function renderWorkoutComparison() {
             comparisonChartInstance.destroy();
         }
 
-        const maxPoints = Math.max(realSplits.length, plannedKmsPace.length, 1);
+        const totalPoints = Math.max(expandedRealKmPaces.length, plannedKmsPace.length, 1);
         const chartLabels = [];
         const realPaceDataset = [];
         const plannedPaceDataset = [];
 
-        for (let i = 0; i < maxPoints; i++) {
-            const splitItem = realSplits[i];
-            const labelStr = splitItem?.label ? splitItem.label.split('(')[0].trim() : ('Km ' + (i + 1));
-            chartLabels.push(labelStr);
+        for (let i = 0; i < totalPoints; i++) {
+            chartLabels.push('Km ' + (i + 1));
             
-            if (splitItem) {
-                const paceVal = splitItem.pace ? parsePaceToMinutes(splitItem.pace) : (splitItem.distance > 0 && splitItem.moving_time ? (splitItem.moving_time / (splitItem.distance / 1000) / 60) : realPaceMin);
-                realPaceDataset.push(parseFloat(paceVal.toFixed(2)));
+            if (i < expandedRealKmPaces.length) {
+                realPaceDataset.push(parseFloat(expandedRealKmPaces[i].toFixed(2)));
             } else {
                 realPaceDataset.push(realPaceMin ? parseFloat(realPaceMin.toFixed(2)) : null);
             }
 
-            if (plannedKmsPace[i]) {
+            if (i < plannedKmsPace.length) {
                 plannedPaceDataset.push(parseFloat(plannedKmsPace[i].toFixed(2)));
             } else {
                 plannedPaceDataset.push(targetPaceMin ? parseFloat(targetPaceMin.toFixed(2)) : null);
