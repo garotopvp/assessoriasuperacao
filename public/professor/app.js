@@ -2063,9 +2063,18 @@ function renderHistoryCalendar() {
                                         <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; font-weight:600;">${wk.title}</span>
                                     </div>
 
-                                    <div class="workout-metric-text" style="font-size:9.5px; opacity:0.7; display:flex; align-items:center; flex-wrap:wrap; gap:4px; font-weight:450; margin-top:2px;">
-                                        <span>${metricText}</span>
-                                        ${durationText ? `<span style="display:flex; align-items:center; gap:2px; opacity:0.8;"><i class="ri-time-line" style="font-size:10px;"></i> ${durationText}</span>` : ''}
+                                    <div class="workout-metric-text" style="font-size:9.5px; opacity:0.9; display:flex; align-items:center; flex-wrap:wrap; gap:4px; font-weight:500; margin-top:2px;">
+                                        ${isCompleted ? `
+                                            <span style="font-weight:800; color:#10b981; display:inline-flex; align-items:center; gap:2px;">
+                                                <i class="ri-check-line" style="font-size:11px;"></i> Real: ${metricText}
+                                            </span>
+                                            ${wkDist ? `<span style="opacity:0.6; font-size:9px;">(Plan: ${wkDist.toFixed(1)}km)</span>` : ''}
+                                            ${wk.metrics?.real_pace ? `<span style="background:rgba(16,185,129,0.12); color:#10b981; padding:1px 4px; border-radius:3px; font-weight:700; font-size:9px;">@ ${wk.metrics.real_pace}</span>` : ''}
+                                            <span style="font-size:8.5px; background:${wk.metrics?.sync_source === 'Garmin' ? 'rgba(0,122,255,0.12)' : 'rgba(252,76,2,0.12)'}; color:${wk.metrics?.sync_source === 'Garmin' ? '#007aff' : '#fc4c02'}; padding:1px 4px; border-radius:3px; font-weight:800;">${wk.metrics?.sync_source || 'Relógio'}</span>
+                                        ` : `
+                                            <span>${metricText}</span>
+                                            ${durationText ? `<span style="display:flex; align-items:center; gap:2px; opacity:0.8;"><i class="ri-time-line" style="font-size:10px;"></i> ${durationText}</span>` : ''}
+                                        `}
                                     </div>
 
                                     <div class="workout-actions-overlay" style="display:none; gap:10px; align-items:center; justify-content:center; border-radius:4px; margin-top:2px; width:100%;">
@@ -2384,9 +2393,18 @@ function renderHistoryCalendar() {
                                                 <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; font-weight:800;">${wk.title}</span>
                                             </div>
 
-                                            <div class="workout-metric-text" style="font-size:9.5px; opacity:0.8; display:flex; align-items:center; flex-wrap:wrap; gap:4px; font-weight:600; margin-top:2px;">
-                                                <span>${metricText}</span>
-                                                ${durationText ? `<span style="display:flex; align-items:center; gap:2px; opacity:0.8;"><i class="ri-time-line" style="font-size:10px;"></i> ${durationText}</span>` : ''}
+                                            <div class="workout-metric-text" style="font-size:9.5px; opacity:0.9; display:flex; align-items:center; flex-wrap:wrap; gap:4px; font-weight:500; margin-top:2px;">
+                                                ${isCompleted ? `
+                                                    <span style="font-weight:800; color:#10b981; display:inline-flex; align-items:center; gap:2px;">
+                                                        <i class="ri-check-line" style="font-size:11px;"></i> Real: ${metricText}
+                                                    </span>
+                                                    ${wkDist ? `<span style="opacity:0.6; font-size:9px;">(Plan: ${wkDist.toFixed(1)}km)</span>` : ''}
+                                                    ${wk.metrics?.real_pace ? `<span style="background:rgba(16,185,129,0.12); color:#10b981; padding:1px 4px; border-radius:3px; font-weight:700; font-size:9px;">@ ${wk.metrics.real_pace}</span>` : ''}
+                                                    <span style="font-size:8.5px; background:${wk.metrics?.sync_source === 'Garmin' ? 'rgba(0,122,255,0.12)' : 'rgba(252,76,2,0.12)'}; color:${wk.metrics?.sync_source === 'Garmin' ? '#007aff' : '#fc4c02'}; padding:1px 4px; border-radius:3px; font-weight:800;">${wk.metrics?.sync_source || 'Relógio'}</span>
+                                                ` : `
+                                                    <span>${metricText}</span>
+                                                    ${durationText ? `<span style="display:flex; align-items:center; gap:2px; opacity:0.8;"><i class="ri-time-line" style="font-size:10px;"></i> ${durationText}</span>` : ''}
+                                                `}
                                             </div>
 
                                             <div class="workout-actions-overlay" style="display:none; gap:10px; align-items:center; justify-content:center; border-radius:4px; margin-top:2px; width:100%;">
@@ -3611,7 +3629,7 @@ function openEditWorkoutModal(workout = null, defaultDate = null) {
     if (tabsEl) {
         if (workout && workout.status === 'completed') {
             tabsEl.style.display = 'flex';
-            switchWorkoutModalTab('presc', false);
+            switchWorkoutModalTab('comp', true);
         } else {
             tabsEl.style.display = 'none';
             switchWorkoutModalTab('presc', false);
@@ -3653,25 +3671,45 @@ function switchWorkoutModalTab(tab, shouldRender = true) {
     const compWrap = $('calendar-workout-comparison-wrap');
     
     if (tab === 'presc') {
-        if (tabPresc) tabPresc.classList.add('active');
-        if (tabComp) tabComp.classList.remove('active');
+        if (tabPresc) {
+            tabPresc.classList.add('active');
+            tabPresc.style.background = '#2563eb';
+            tabPresc.style.color = '#ffffff';
+            tabPresc.style.borderColor = '#2563eb';
+        }
+        if (tabComp) {
+            tabComp.classList.remove('active');
+            tabComp.style.background = '#f8fafc';
+            tabComp.style.color = '#64748b';
+            tabComp.style.borderColor = '#e2e8f0';
+        }
         if (editorWrap) editorWrap.style.display = 'flex';
         if (compWrap) compWrap.style.display = 'none';
         
         // Mostrar botões de adicionar etapas
         const runBtn = document.querySelector('[onclick="addCalendarWorkoutStep(\'run\')"]');
         const repBtn = document.querySelector('[onclick="addCalendarWorkoutStep(\'repetition\')"]');
-        if (runBtn) runBtn.parentElement.style.display = 'flex';
+        if (runBtn && runBtn.parentElement) runBtn.parentElement.style.display = 'flex';
     } else {
-        if (tabPresc) tabPresc.classList.remove('active');
-        if (tabComp) tabComp.classList.add('active');
+        if (tabPresc) {
+            tabPresc.classList.remove('active');
+            tabPresc.style.background = '#f8fafc';
+            tabPresc.style.color = '#64748b';
+            tabPresc.style.borderColor = '#e2e8f0';
+        }
+        if (tabComp) {
+            tabComp.classList.add('active');
+            tabComp.style.background = '#10b981';
+            tabComp.style.color = '#ffffff';
+            tabComp.style.borderColor = '#10b981';
+        }
         if (editorWrap) editorWrap.style.display = 'none';
         if (compWrap) compWrap.style.display = 'flex';
         
         // Esconder botões de adicionar etapas
         const runBtn = document.querySelector('[onclick="addCalendarWorkoutStep(\'run\')"]');
         const repBtn = document.querySelector('[onclick="addCalendarWorkoutStep(\'repetition\')"]');
-        if (runBtn) runBtn.parentElement.style.display = 'none';
+        if (runBtn && runBtn.parentElement) runBtn.parentElement.style.display = 'none';
         
         if (shouldRender) {
             renderWorkoutComparison();
@@ -3686,8 +3724,7 @@ function renderWorkoutComparison() {
     const wk = calendarWorkouts.find(w => String(w.id) === String($('edit-workout-id').value));
     if (!wk) return;
 
-    // --- IDÉIA 2: CÁLCULO DE ADERÊNCIA (MATCH SCORE) ---
-    const plannedDist = parseFloat(wk.metrics?.distance_value) || parseFloat(wk.distance) || 0;
+    const plannedDist = parseFloat(wk.metrics?.distance_value) || parseFloat(wk.distance) || (parseFloat(wk.metrics?.distance) || 0);
     const realDist = parseFloat(wk.metrics?.real_distance) || parseFloat(wk.real_distance) || 0;
     
     const athlete = athletes.find(x => x.id == currentHistoryAthleteId);
@@ -3704,43 +3741,131 @@ function renderWorkoutComparison() {
     const durDiffPct = plannedDur > 0 ? ((realDur - plannedDur) / plannedDur) * 100 : 0;
     const paceDiffPct = targetPaceMin > 0 ? ((realPaceMin - targetPaceMin) / targetPaceMin) * 100 : 0;
 
-    let sumAbsDevs = 0;
-    let devCount = 0;
-    if (plannedDist > 0) { sumAbsDevs += Math.min(100, Math.abs(distDiffPct)); devCount++; }
-    if (plannedDur > 0) { sumAbsDevs += Math.min(100, Math.abs(durDiffPct)); devCount++; }
-    if (targetPaceMin > 0) { sumAbsDevs += Math.min(100, Math.abs(paceDiffPct)); devCount++; }
-    
-    const matchScore = devCount > 0 ? Math.round(100 - (sumAbsDevs / devCount)) : 100;
+    let scorePoints = 100;
+    if (plannedDist > 0) {
+        const dDev = Math.abs(distDiffPct);
+        scorePoints -= Math.min(35, dDev * 1.5);
+    }
+    if (targetPaceMin > 0) {
+        const pDev = Math.abs(paceDiffPct);
+        scorePoints -= Math.min(35, pDev * 2.0);
+    }
+    if (plannedDur > 0) {
+        const tDev = Math.abs(durDiffPct);
+        scorePoints -= Math.min(30, tDev * 1.0);
+    }
+    const matchScore = Math.max(15, Math.min(100, Math.round(scorePoints)));
     
     let scoreColor = '#10b981'; // Green
     let scoreText = 'Aderência Excelente';
+    let scoreDesc = 'O aluno executou o treino com alta fidelidade às metas prescritas pelo treinador.';
     if (matchScore < 70) {
         scoreColor = '#ef4444'; // Red
-        scoreText = 'Fora do Alvo';
+        scoreText = 'Desvio do Alvo';
+        scoreDesc = 'Houve divergência expressiva no volume, ritmo ou tempo em relação à planilha.';
     } else if (matchScore < 88) {
         scoreColor = '#f59e0b'; // Orange
-        scoreText = 'Aderência Moderada';
+        scoreText = 'Boa Aderência';
+        scoreDesc = 'O treino foi concluído com pequenas variações de ritmo ou tempo em relação ao proposto.';
     }
 
-    const getBadge = (diffPct) => {
+    const getBadge = (diffPct, isPace = false) => {
         const absDiff = Math.abs(diffPct);
-        let color = '#10b981'; // green
-        let text = `Dentro do Alvo (${diffPct >= 0 ? '+' : ''}${diffPct.toFixed(1)}%)`;
+        let color = '#10b981';
+        let text = 'No Alvo (' + (diffPct >= 0 ? '+' : '') + diffPct.toFixed(1) + '%)';
         
         if (absDiff > 15) {
-            color = '#ef4444'; // red
-            text = `${diffPct >= 0 ? 'Mais alto' : 'Mais baixo'} (${diffPct >= 0 ? '+' : ''}${diffPct.toFixed(1)}%)`;
+            color = '#ef4444';
+            text = (diffPct >= 0 ? (isPace ? 'Mais lento' : 'Acima') : (isPace ? 'Mais rápido' : 'Abaixo')) + ' (' + (diffPct >= 0 ? '+' : '') + diffPct.toFixed(1) + '%)';
         } else if (absDiff > 5) {
-            color = '#f59e0b'; // orange
-            text = `Desvio Moderado (${diffPct >= 0 ? '+' : ''}${diffPct.toFixed(1)}%)`;
+            color = '#f59e0b';
+            text = 'Variação leve (' + (diffPct >= 0 ? '+' : '') + diffPct.toFixed(1) + '%)';
         }
         
-        return `<span style="font-size:11px; background:${color}15; color:${color}; padding:3px 8px; border-radius:100px; font-weight:700; border:1px solid ${color}25;">${text}</span>`;
+        return '<span style="font-size:11px; background:' + color + '15; color:' + color + '; padding:3px 8px; border-radius:100px; font-weight:700; border:1px solid ' + color + '25;">' + text + '</span>';
     };
 
-    // --- IDÉIA 3: COMPARAÇÃO DE VOLTAS E TIROS (SPLIT MATCHER) ---
-    const plannedKmsPace = [];
+    // Origem (Garmin ou Strava)
+    let sourceBadgeHtml = '';
+    const isGarmin = wk.metrics?.sync_source === 'Garmin' || wk.metrics?.garmin_activity_id;
+    const isStrava = wk.metrics?.sync_source === 'Strava' || wk.strava_id || wk.metrics?.strava_id;
     
+    if (isGarmin) {
+        const gId = wk.metrics?.garmin_activity_id;
+        sourceBadgeHtml = `
+            <a href="${gId ? 'https://connect.garmin.com/modern/activity/' + gId : 'https://connect.garmin.com'}" 
+               target="_blank" rel="noopener noreferrer" 
+               style="display: inline-flex; align-items: center; gap: 8px; background: #007aff; color: white; padding: 10px 18px; border-radius: 8px; font-size: 12px; font-weight: 800; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25); transition: all 0.2s; border: none; cursor: pointer; flex-shrink: 0;"
+               onmouseover="this.style.background='#0062cc'; this.style.transform='translateY(-1px)';" 
+               onmouseout="this.style.background='#007aff'; this.style.transform='translateY(0)';"
+               title="Ver atividade completa no Garmin Connect">
+                <i class="ri-radar-line" style="font-size: 15px;"></i>
+                Garmin Connect ${gId ? '#' + gId : ''} <i class="ri-external-link-line" style="font-size: 11px;"></i>
+            </a>
+        `;
+    } else if (isStrava) {
+        const sId = wk.strava_id || wk.metrics?.strava_id;
+        sourceBadgeHtml = `
+            <a href="https://www.strava.com/activities/${sId}" 
+               target="_blank" rel="noopener noreferrer" 
+               style="display: inline-flex; align-items: center; gap: 8px; background: #fc4c02; color: white; padding: 10px 18px; border-radius: 8px; font-size: 12px; font-weight: 800; text-decoration: none; box-shadow: 0 4px 12px rgba(252, 76, 2, 0.25); transition: all 0.2s; border: none; cursor: pointer; flex-shrink: 0;"
+               onmouseover="this.style.background='#e04302'; this.style.transform='translateY(-1px)';" 
+               onmouseout="this.style.background='#fc4c02'; this.style.transform='translateY(0)';"
+               title="Ver atividade no Strava">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.556L8.344 12.4h3.065L8.344 4 3.2 12.4h3.065z"/></svg>
+                Ver no Strava <i class="ri-external-link-line" style="font-size: 11px;"></i>
+            </a>
+        `;
+    }
+
+    // Biometria do Relógio
+    let biometricsHtml = '';
+    const avgHr = wk.metrics?.avg_hr || wk.metrics?.avgHeartRate;
+    const maxHr = wk.metrics?.max_hr || wk.metrics?.maxHeartRate;
+    const cadence = wk.metrics?.cadence || wk.metrics?.avgCadence;
+    const calories = wk.metrics?.calories;
+    const elevation = wk.metrics?.elevation;
+
+    if (avgHr || cadence || calories || elevation) {
+        biometricsHtml = `
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px;">
+                <div class="stat-card" style="margin: 0; padding: 12px 14px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
+                    <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:4px; display:flex; align-items:center; gap:4px;">
+                        <i class="ri-heart-pulse-fill" style="color:#ef4444; font-size:13px;"></i> Freq. Cardíaca
+                    </div>
+                    <div style="font-size: 18px; font-weight: 900; color: var(--text);">${avgHr ? avgHr + ' bpm' : '--'}</div>
+                    <div style="font-size: 10px; color: var(--text-muted); font-weight: 600;">Máxima: ${maxHr ? maxHr + ' bpm' : '--'}</div>
+                </div>
+
+                <div class="stat-card" style="margin: 0; padding: 12px 14px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
+                    <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:4px; display:flex; align-items:center; gap:4px;">
+                        <i class="ri-footprint-line" style="color:#3b82f6; font-size:13px;"></i> Cadência
+                    </div>
+                    <div style="font-size: 18px; font-weight: 900; color: var(--text);">${cadence ? cadence + ' spm' : '--'}</div>
+                    <div style="font-size: 10px; color: var(--text-muted); font-weight: 600;">Passadas por minuto</div>
+                </div>
+
+                <div class="stat-card" style="margin: 0; padding: 12px 14px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
+                    <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:4px; display:flex; align-items:center; gap:4px;">
+                        <i class="ri-fire-fill" style="color:#f59e0b; font-size:13px;"></i> Calorias
+                    </div>
+                    <div style="font-size: 18px; font-weight: 900; color: var(--text);">${calories ? calories + ' kcal' : '--'}</div>
+                    <div style="font-size: 10px; color: var(--text-muted); font-weight: 600;">Gasto energético</div>
+                </div>
+
+                <div class="stat-card" style="margin: 0; padding: 12px 14px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
+                    <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:4px; display:flex; align-items:center; gap:4px;">
+                        <i class="ri-riding-line" style="color:#10b981; font-size:13px;"></i> Elevação
+                    </div>
+                    <div style="font-size: 18px; font-weight: 900; color: var(--text);">${elevation ? '+' + elevation + 'm' : '--'}</div>
+                    <div style="font-size: 10px; color: var(--text-muted); font-weight: 600;">Ganho acumulado</div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Paces planejados por km para o gráfico e tabela
+    const plannedKmsPace = [];
     if (Array.isArray(_editingCalendarWorkout.steps)) {
         _editingCalendarWorkout.steps.forEach(step => {
             const stepNorm = normalizeWorkoutStep(step);
@@ -3760,138 +3885,178 @@ function renderWorkoutComparison() {
         });
     }
 
-    const realSplits = wk.metrics?.splits || [];
-    
+    // Voltas/Fases reais
+    const realSplits = wk.metrics?.splits || wk.splits || [];
     let splitsTableHtml = '';
+
     if (realSplits.length > 0) {
         splitsTableHtml = `
-            <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; margin-top: 10px;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; margin-top: 6px;">
                 <thead>
                     <tr style="border-bottom: 2px solid var(--border-strong); background: rgba(0,0,0,0.02);">
-                        <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">KM</th>
-                        <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">Pace Proposto</th>
-                        <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">Pace Real (Strava)</th>
-                        <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">Desvio / Status</th>
+                        <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">Bloco / Etapa</th>
+                        <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">Distância & Tempo</th>
+                        <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">Meta (Proposto)</th>
+                        <th style="padding: 10px 12px; font-weight: 800; color: var(--primary);">Real Executado</th>
+                        <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">Biometria</th>
+                        <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">Conformidade</th>
                     </tr>
                 </thead>
                 <tbody>
         `;
-        
+
         realSplits.forEach((split, index) => {
-            const kmNum = split.split || (index + 1);
-            const realPaceDecimal = split.moving_time / (split.distance / 1000) / 60;
-            const realPaceFormatted = formatDurationFromMinutes(realPaceDecimal);
-            
+            const splitLabel = split.label || ('Km ' + (split.split || (index + 1)));
+            const splitDistKm = split.distance ? (split.distance >= 100 ? (split.distance / 1000).toFixed(2) + ' km' : split.distance + 'm') : '--';
+            const splitDur = split.moving_time ? formatDurationFromMinutes(split.moving_time / 60) : (split.duration ? formatDurationFromMinutes(split.duration / 60) : '--');
+            const splitPace = split.pace || (split.distance > 0 && split.moving_time ? formatDurationFromMinutes((split.moving_time / (split.distance / 1000)) / 60) + '/km' : '--');
+            const splitPaceDecimal = parsePaceToMinutes(splitPace);
             const plannedPaceDecimal = plannedKmsPace[index] || targetPaceMin || (athleteVam ? 60 / athleteVam : 5.0);
             const plannedPaceFormatted = formatDurationFromMinutes(plannedPaceDecimal);
-            
-            const diffSecs = Math.round((realPaceDecimal - plannedPaceDecimal) * 60);
+
+            const diffSecs = Math.round((splitPaceDecimal - plannedPaceDecimal) * 60);
             const absDiffSecs = Math.abs(diffSecs);
-            
+
             let statusText = '';
-            let statusColor = '#10b981'; // green
+            let statusColor = '#10b981';
             if (absDiffSecs <= 10) {
-                statusText = `Aderência Perfeita (${diffSecs >= 0 ? '+' : ''}${diffSecs}s/km)`;
+                statusText = 'Aderência Perfeita (' + (diffSecs >= 0 ? '+' : '') + diffSecs + 's/km)';
             } else if (absDiffSecs <= 25) {
-                statusColor = '#f59e0b'; // orange
-                statusText = `${diffSecs > 0 ? 'Mais Lento' : 'Mais Rápido'} (${diffSecs >= 0 ? '+' : ''}${diffSecs}s/km)`;
+                statusColor = '#f59e0b';
+                statusText = (diffSecs > 0 ? 'Mais Lento' : 'Mais Rápido') + ' (' + (diffSecs >= 0 ? '+' : '') + diffSecs + 's/km)';
             } else {
-                statusColor = '#ef4444'; // red
-                statusText = `${diffSecs > 0 ? 'Forte Desaceleração' : 'Ritmo excessivo'} (${diffSecs >= 0 ? '+' : ''}${diffSecs}s/km)`;
+                statusColor = '#ef4444';
+                statusText = (diffSecs > 0 ? 'Abaixo do Alvo' : 'Acima do Alvo') + ' (' + (diffSecs >= 0 ? '+' : '') + diffSecs + 's/km)';
             }
-            
+
             splitsTableHtml += `
                 <tr style="border-bottom: 1px solid var(--border-strong);">
-                    <td style="padding: 12px; font-weight: 800;">${kmNum}</td>
+                    <td style="padding: 12px; font-weight: 800; color: var(--text);">
+                        ${splitLabel}
+                    </td>
+                    <td style="padding: 12px; font-size: 12px; color: var(--text-muted); font-weight: 600;">
+                        ${splitDistKm} em ${splitDur}
+                    </td>
                     <td style="padding: 12px; font-weight: 700; color: var(--text-muted);">${plannedPaceFormatted}/km</td>
-                    <td style="padding: 12px; font-weight: 800; color: var(--primary);">${realPaceFormatted}/km</td>
-                    <td style="padding: 12px; font-weight: 600; color: ${statusColor};">${statusText}</td>
+                    <td style="padding: 12px; font-weight: 900; color: var(--primary); font-size: 14px;">${splitPace}</td>
+                    <td style="padding: 12px; font-size: 11px; color: var(--text-muted);">
+                        ${split.average_heartrate ? '<span style="color:#ef4444; font-weight:700;"><i class="ri-heart-pulse-fill"></i> ' + split.average_heartrate + ' bpm</span>' : '--'}
+                        ${split.cadence ? ' | <span style="font-weight:700;">' + split.cadence + ' spm</span>' : ''}
+                    </td>
+                    <td style="padding: 12px; font-weight: 700; color: ${statusColor};">${statusText}</td>
                 </tr>
             `;
         });
-        
-        splitsTableHtml += `
-                </tbody>
-            </table>
-        `;
-    } else {
-        splitsTableHtml = `
-            <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 600; border: 1.5px dashed var(--border-strong); border-radius: 8px;">
-                <i class="ri-information-line" style="font-size: 18px; vertical-align: middle; margin-right: 4px;"></i> 
-                Nenhuma volta individual (split) de 1 km foi retornada pelo Strava para este treino.
-            </div>
-        `;
-    }
 
-    let stravaBtnHtml = '';
-    const stravaId = wk.strava_id;
-    if (stravaId) {
-        stravaBtnHtml = `
-            <a href="https://www.strava.com/activities/${stravaId}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #fc4c02; color: white; padding: 10px 18px; border-radius: 8px; font-size: 12px; font-weight: 800; text-decoration: none; box-shadow: 0 4px 12px rgba(252, 76, 2, 0.25); transition: all 0.2s; border: none; cursor: pointer; flex-shrink: 0; align-self: center;" onmouseover="this.style.background='#e04302'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#fc4c02'; this.style.transform='translateY(0)';">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.556L8.344 12.4h3.065L8.344 4 3.2 12.4h3.065z"/></svg>
-                Ver no Strava <i class="ri-external-link-line" style="font-size: 11px;"></i>
-            </a>
-        `;
+        splitsTableHtml += '</tbody></table>';
+    } else {
+        // Fallback: listar os blocos prescritos cruzando com o ritmo real geral
+        const steps = _editingCalendarWorkout.steps || [];
+        if (steps.length > 0) {
+            splitsTableHtml = `
+                <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; margin-top: 6px;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border-strong); background: rgba(0,0,0,0.02);">
+                            <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">Bloco Prescrito</th>
+                            <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">Volume Proposto</th>
+                            <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">Ritmo Alvo</th>
+                            <th style="padding: 10px 12px; font-weight: 800; color: var(--primary);">Ritmo Real Médio</th>
+                            <th style="padding: 10px 12px; font-weight: 800; color: var(--text-muted);">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            steps.forEach((step, sIdx) => {
+                const label = step.label || ('Etapa ' + (sIdx + 1));
+                const dist = step.duration?.type === 'distance' ? step.duration.value + ' km' : (step.duration?.value ? step.duration.value + ' min' : '--');
+                const targetP = step.intensity?.value ? step.intensity.value + (step.intensity.type === 'pace' ? '/km' : '% VAM') : (targetPaceStr ? targetPaceStr + '/km' : '--');
+
+                splitsTableHtml += `
+                    <tr style="border-bottom: 1px solid var(--border-strong);">
+                        <td style="padding: 12px; font-weight: 800; color: var(--text);">${label}</td>
+                        <td style="padding: 12px; font-weight: 600; color: var(--text-muted);">${dist}</td>
+                        <td style="padding: 12px; font-weight: 700; color: var(--text-muted);">${targetP}</td>
+                        <td style="padding: 12px; font-weight: 900; color: var(--primary);">${realPaceStr || '--'}/km</td>
+                        <td style="padding: 12px; font-weight: 700; color: #10b981;"><i class="ri-checkbox-circle-fill"></i> Concluído</td>
+                    </tr>
+                `;
+            });
+
+            splitsTableHtml += '</tbody></table>';
+        } else {
+            splitsTableHtml = `
+                <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 600; border: 1.5px dashed var(--border-strong); border-radius: 8px;">
+                    <i class="ri-information-line" style="font-size: 18px; vertical-align: middle; margin-right: 4px;"></i> 
+                    Treino executado e registrado pelo relógio. Distância Real: ${realDist.toFixed(2)} km em ${realDur} min.
+                </div>
+            `;
+        }
     }
 
     wrap.innerHTML = `
+        <!-- CARD DE ADERÊNCIA GERAL -->
         <div style="display: flex; gap: 16px; align-items: stretch; margin-bottom: 20px;">
             <div class="stat-card" style="flex: 1; display: flex; align-items: center; gap: 20px; background: linear-gradient(135deg, ${scoreColor}12 0%, ${scoreColor}04 100%); border: 1.5px solid ${scoreColor}30; margin: 0; padding: 20px; border-radius: 12px; box-shadow: none; width: 100%;">
-                <div style="position: relative; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: white; box-shadow: 0 8px 20px rgba(0,0,0,0.05); flex-shrink: 0; border: 4px solid ${scoreColor};">
-                    <span style="font-size: 24px; font-weight: 900; color: ${scoreColor};">${matchScore}%</span>
+                <div style="position: relative; width: 84px; height: 84px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: white; box-shadow: 0 8px 20px rgba(0,0,0,0.05); flex-shrink: 0; border: 4px solid ${scoreColor};">
+                    <span style="font-size: 26px; font-weight: 900; color: ${scoreColor};">${matchScore}%</span>
                 </div>
                 <div style="flex: 1;">
-                    <h4 style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin: 0 0 2px 0;">Aderência à Planilha</h4>
-                    <h3 style="font-size: 18px; font-weight: 900; color: ${scoreColor}; margin: 0 0 4px 0; letter-spacing: -0.5px;">${scoreText}</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin: 0; line-height: 1.4; font-weight: 500;">Métrica calculada cruzando distância, ritmo e duração com o prescrito pelo treinador.</p>
+                    <h4 style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin: 0 0 2px 0;">Índice de Aderência à Planilha</h4>
+                    <h3 style="font-size: 19px; font-weight: 900; color: ${scoreColor}; margin: 0 0 4px 0; letter-spacing: -0.5px;">${scoreText}</h3>
+                    <p style="font-size: 12px; color: var(--text-muted); margin: 0; line-height: 1.4; font-weight: 500;">${scoreDesc}</p>
                 </div>
-                ${stravaBtnHtml}
+                ${sourceBadgeHtml}
             </div>
         </div>
 
+        <!-- CARDS COMPARATIVOS (VOLUME, TEMPO, PACE) -->
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
-            <div class="stat-card" style="margin: 0; padding: 14px 16px; background: var(--panel); border: 1px solid var(--border-strong);">
+            <div class="stat-card" style="margin: 0; padding: 14px 16px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
                 <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Volume (Distância)</div>
                 <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
-                    <div style="font-size: 20px; font-weight: 900; color: var(--text);">${realDist.toFixed(2)} km</div>
+                    <div style="font-size: 22px; font-weight: 900; color: var(--text);">${realDist.toFixed(2)} km</div>
                     <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Proposto: ${plannedDist.toFixed(1)} km</div>
                 </div>
                 ${getBadge(distDiffPct)}
             </div>
             
-            <div class="stat-card" style="margin: 0; padding: 14px 16px; background: var(--panel); border: 1px solid var(--border-strong);">
+            <div class="stat-card" style="margin: 0; padding: 14px 16px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
                 <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Duração (Tempo)</div>
                 <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
-                    <div style="font-size: 20px; font-weight: 900; color: var(--text);">${realDur ? formatDurationFromMinutes(realDur) : '--'}</div>
+                    <div style="font-size: 22px; font-weight: 900; color: var(--text);">${realDur ? formatDurationFromMinutes(realDur) : '--'}</div>
                     <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Proposto: ${plannedDur ? formatDurationFromMinutes(plannedDur) : '--'}</div>
                 </div>
                 ${getBadge(durDiffPct)}
             </div>
 
-            <div class="stat-card" style="margin: 0; padding: 14px 16px; background: var(--panel); border: 1px solid var(--border-strong);">
+            <div class="stat-card" style="margin: 0; padding: 14px 16px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
                 <div style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Pace Médio</div>
                 <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
-                    <div style="font-size: 20px; font-weight: 900; color: var(--text);">${realPaceStr || '--'}/km</div>
+                    <div style="font-size: 22px; font-weight: 900; color: var(--text);">${realPaceStr || '--'}/km</div>
                     <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Proposto: ${targetPaceStr || '--'}/km</div>
                 </div>
-                ${getBadge(paceDiffPct)}
+                ${getBadge(paceDiffPct, true)}
             </div>
         </div>
 
-        <!-- IDÉIA 1: OVERLAY DE GRÁFICOS (PLANEJADO VS REAL) -->
-        <div class="stat-card" style="margin: 0 0 20px 0; padding: 16px; background: var(--panel); border: 1px solid var(--border-strong);">
+        <!-- BIOMETRIA & DADOS DO RELÓGIO -->
+        ${biometricsHtml}
+
+        <!-- GRÁFICO COMPARATIVO DE RITMO -->
+        <div class="stat-card" style="margin: 0 0 20px 0; padding: 16px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
             <h4 style="font-size: 13px; font-weight: 800; color: var(--text); margin: 0 0 14px 0; display: flex; align-items: center; gap: 6px;">
-                <i class="ri-line-chart-line" style="color: var(--primary); font-size: 18px;"></i> Comparativo de Ritmo (Pace Planejado vs Real)
+                <i class="ri-line-chart-line" style="color: var(--primary); font-size: 18px;"></i> Comparativo de Ritmo (Pace Planejado vs Real Executado)
             </h4>
             <div style="height: 220px; position: relative; width: 100%;">
                 <canvas id="workout-comparison-chart"></canvas>
             </div>
         </div>
 
-        <!-- IDÉIA 3: TABELA ANALÍTICA DE VOLTAS (SPLIT MATCHER) -->
-        <div class="stat-card" style="margin: 0; padding: 16px; background: var(--panel); border: 1px solid var(--border-strong);">
+        <!-- TABELA ANALÍTICA DE VOLTAS / ETAPAS -->
+        <div class="stat-card" style="margin: 0; padding: 16px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;">
             <h4 style="font-size: 13px; font-weight: 800; color: var(--text); margin: 0 0 14px 0; display: flex; align-items: center; gap: 6px;">
-                <i class="ri-list-check" style="color: var(--primary); font-size: 18px;"></i> Análise de Desempenho por Quilômetro
+                <i class="ri-list-check" style="color: var(--primary); font-size: 18px;"></i> Desempenho Etapa por Etapa / Quilômetro
             </h4>
             <div style="overflow-x: auto; width: 100%;">
                 ${splitsTableHtml}
@@ -3907,19 +4072,21 @@ function renderWorkoutComparison() {
             comparisonChartInstance.destroy();
         }
 
-        const maxPoints = Math.max(realSplits.length, plannedKmsPace.length);
+        const maxPoints = Math.max(realSplits.length, plannedKmsPace.length, 1);
         const chartLabels = [];
         const realPaceDataset = [];
         const plannedPaceDataset = [];
 
         for (let i = 0; i < maxPoints; i++) {
-            chartLabels.push(`Km ${i + 1}`);
+            const splitItem = realSplits[i];
+            const labelStr = splitItem?.label ? splitItem.label.split('(')[0].trim() : ('Km ' + (i + 1));
+            chartLabels.push(labelStr);
             
-            if (realSplits[i]) {
-                const realP = realSplits[i].moving_time / (realSplits[i].distance / 1000) / 60;
-                realPaceDataset.push(parseFloat(realP.toFixed(2)));
+            if (splitItem) {
+                const paceVal = splitItem.pace ? parsePaceToMinutes(splitItem.pace) : (splitItem.distance > 0 && splitItem.moving_time ? (splitItem.moving_time / (splitItem.distance / 1000) / 60) : realPaceMin);
+                realPaceDataset.push(parseFloat(paceVal.toFixed(2)));
             } else {
-                realPaceDataset.push(null);
+                realPaceDataset.push(realPaceMin ? parseFloat(realPaceMin.toFixed(2)) : null);
             }
 
             if (plannedKmsPace[i]) {
@@ -3937,10 +4104,10 @@ function renderWorkoutComparison() {
                     {
                         label: 'Ritmo Proposto (Target)',
                         data: plannedPaceDataset,
-                        borderColor: 'rgba(18, 101, 194, 0.9)',
-                        backgroundColor: 'rgba(18, 101, 194, 0.05)',
-                        borderWidth: 3,
-                        pointBackgroundColor: '#1265C2',
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.05)',
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#2563eb',
                         pointBorderColor: '#fff',
                         pointRadius: 4,
                         tension: 0.15,
@@ -3949,12 +4116,12 @@ function renderWorkoutComparison() {
                     {
                         label: 'Ritmo Real (Executado)',
                         data: realPaceDataset,
-                        borderColor: '#fc4c02',
-                        backgroundColor: 'rgba(252, 76, 2, 0.12)',
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.12)',
                         borderWidth: 3,
-                        pointBackgroundColor: '#fc4c02',
+                        pointBackgroundColor: '#10b981',
                         pointBorderColor: '#fff',
-                        pointRadius: 4,
+                        pointRadius: 5,
                         tension: 0.15,
                         fill: true
                     }
@@ -3978,7 +4145,7 @@ function renderWorkoutComparison() {
                         backgroundColor: 'rgba(255, 255, 255, 0.98)',
                         titleColor: '#1e293b',
                         bodyColor: '#475569',
-                        borderColor: 'rgba(0,0,0,0.06)',
+                        borderColor: 'rgba(0,0,0,0.08)',
                         borderWidth: 1,
                         padding: 10,
                         titleFont: { size: 12, weight: '800' },
@@ -3988,7 +4155,7 @@ function renderWorkoutComparison() {
                                 const val = context.parsed.y;
                                 const m = Math.floor(val);
                                 const s = Math.round((val - m) * 60);
-                                return `${context.dataset.label}: ${m}:${s.toString().padStart(2, '0')} /km`;
+                                return context.dataset.label + ': ' + m + ':' + s.toString().padStart(2, '0') + ' /km';
                             }
                         }
                     }
@@ -4000,14 +4167,14 @@ function renderWorkoutComparison() {
                     },
                     y: {
                         reverse: true,
-                        grid: { color: 'rgba(0,0,0,0.03)' },
+                        grid: { color: 'rgba(0,0,0,0.04)' },
                         ticks: {
                             font: { size: 10, weight: '700', family: "'Inter', sans-serif" },
                             color: '#64748b',
                             callback: (val) => {
                                 const m = Math.floor(val);
                                 const s = Math.round((val - m) * 60);
-                                return `${m}:${s.toString().padStart(2, '0')}`;
+                                return m + ':' + s.toString().padStart(2, '0');
                             }
                         }
                     }
@@ -4028,10 +4195,11 @@ function extractPacesFromStep(step, array, athleteVam) {
     if (athleteVam && athleteVam > 0) {
         const intType = step.intensity?.type || 'none';
         const intVal = parseFloat(step.intensity?.value) || 0;
+        const paceMins = parsePaceToMinutes(step.intensity?.value);
         if (intType === 'vam' && intVal > 0) {
             speedKmh = (intVal / 100) * athleteVam;
-        } else if (intType === 'pace' && intVal > 0) {
-            speedKmh = 60 / intVal;
+        } else if (intType === 'pace' && paceMins > 0) {
+            speedKmh = 60 / paceMins;
         } else {
             const stepType = step.type || 'run';
             if (stepType === 'warmup' || stepType === 'cooldown' || stepType === 'recovery') {
