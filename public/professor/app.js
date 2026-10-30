@@ -551,7 +551,7 @@ function renderDashboard(){
     const rec=$('dashboard-recent');
     if(!recent.length){rec.innerHTML='<div style="padding:32px;text-align:center;color:var(--text-muted);"><i class="ri-image-line" style="font-size:36px;display:block;margin-bottom:8px;opacity:0.3;"></i>Nenhum treino gerado.</div>';return;}
     rec.innerHTML=recent.map(h=>{const a=athletes.find(x=>x.id===h.athleteId);const d=new Date(h.id).toLocaleDateString('pt-BR');
-        return`<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);"><div><div style="font-weight:600;font-size:14px;">${a?a.name:'Removido'}</div><div style="font-size:12px;color:var(--text-muted);">${h.calcData.categoryName} · ${h.calcData.groupName} · ${h.calcData.volume}km</div></div><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:12px;color:var(--text-muted);">${d}</span><button class="btn btn-secondary" onclick="viewExport(${h.id})" style="padding:5px 10px;font-size:12px;"><i class="ri-eye-line"></i> Ver</button></div></div>`;
+        return`<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);"><div><div style="font-weight:600;font-size:14px;cursor:pointer;" onclick="${a?`openHistory('${a.id}')`:``}" title="Abrir Calendário">${a?a.name:'Removido'}</div><div style="font-size:12px;color:var(--text-muted);">${h.calcData.categoryName} · ${h.calcData.groupName} · ${h.calcData.volume}km</div></div><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:12px;color:var(--text-muted);">${d}</span><button class="btn btn-secondary" onclick="viewExport(${h.id})" style="padding:5px 10px;font-size:12px;"><i class="ri-eye-line"></i> Ver</button></div></div>`;
     }).join('');
 }
 
@@ -1376,10 +1376,10 @@ function renderAthletes(){
         return`<tr>
             <td>
                 <div style="display: flex; align-items: center; gap: 8px;">
-                    <div style="width:32px; height:32px; border-radius:50%; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#f1f5f9; border:1px solid #e2e8f0;">
+                    <div onclick="openHistory('${a.id}')" style="width:32px; height:32px; border-radius:50%; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#f1f5f9; border:1px solid #e2e8f0; cursor:pointer;" title="Abrir Calendário de ${a.name || 'Atleta'}">
                         ${a.avatar_url ? `<img src="${a.avatar_url}" style="width:100%;height:100%;object-fit:cover;">` : `<span style="font-size:12px;font-weight:700;color:var(--primary);">${(a.name && a.name.trim() !== '') ? a.name.charAt(0).toUpperCase() : 'A'}</span>`}
                     </div>
-                    <strong onclick="editAthlete('${a.id}')" style="cursor:pointer;color:var(--primary-color);text-decoration:none;">${displayName}</strong>
+                    <strong onclick="openHistory('${a.id}')" style="cursor:pointer;color:var(--primary-color);text-decoration:none;" title="Abrir Calendário de ${a.name || 'Atleta'}" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${displayName}</strong>
                     ${(a.lastActivityDate && (new Date() - new Date(a.lastActivityDate)) > 5 * 24 * 60 * 60 * 1000) ? `<span title="Inativo há mais de 5 dias" style="color:var(--warning); font-size:16px;"><i class="ri-error-warning-fill"></i></span>` : ''}
                 </div>
                 ${a.phone?`<div style="font-size:11px;color:var(--text-muted);">${a.phone}</div>`:''}
@@ -1519,6 +1519,13 @@ let calendarCurrentDate = new Date();
 let calendarWorkouts = [];
 
 async function openHistory(aId) {
+    historyLibraryVisible = false;
+    historyVamTableVisible = false;
+    if ($('history-library-container')) $('history-library-container').style.display = 'none';
+    if ($('history-vam-table-container')) $('history-vam-table-container').style.display = 'none';
+    if ($('library-toggle-text')) $('library-toggle-text').textContent = 'Biblioteca de Treinos';
+    if ($('vam-table-toggle-text')) $('vam-table-toggle-text').textContent = 'Tabela de Ritmos (VAM)';
+
     currentHistoryAthleteId = aId;
     const a = athletes.find(x => x.id == aId);
     if (!a) return;
@@ -1875,6 +1882,344 @@ function handleYearDayClick(dateStr) {
     renderHistoryCalendar();
 }
 
+// ─── Helpers Visuais do Calendário no Padrão Novo ───────────────────────────
+function formatWeeklyDurationText(mins) {
+    if (!mins || isNaN(mins) || mins <= 0) return '';
+    const totalMinutes = Math.round(mins);
+    const hrs = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    if (hrs > 0) {
+        return m > 0 ? `${hrs}h ${m}min` : `${hrs}h`;
+    }
+    return `${m}min`;
+}
+
+function renderModernWorkoutCardHtml(wk, athleteVam) {
+    const isCompleted = wk.status === 'completed';
+    // Barra superior: verde (#00c853) se concluído, âmbar (#f59e0b) se pendente/planejado (como no print)
+    const topBarColor = isCompleted ? '#00c853' : '#f59e0b';
+    
+    // Ícone da modalidade (Corrida em tom verde/teal #00897b idêntico ao padrão oficial)
+    let sportIcon = `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="color:#00897b; flex-shrink:0;">
+            <circle cx="13" cy="4" r="2"></circle>
+            <path d="M14 17l2-4-3-3 1-3.5-3.5 1.5L9 11l3 2-2 4 4 1"></path>
+            <path d="M5 17l3-3"></path>
+            <path d="M15 13l4 1"></path>
+        </svg>
+    `;
+    if (wk.type === 'Ciclismo') {
+        sportIcon = `<i class="ri-riding-line" style="font-size:15px; color:#0284c7; flex-shrink:0;"></i>`;
+    } else if (wk.type === 'Natação') {
+        sportIcon = `<i class="ri-drop-line" style="font-size:15px; color:#06b6d4; flex-shrink:0;"></i>`;
+    } else if (wk.type === 'Fortalecimento') {
+        sportIcon = `<i class="ri-focus-3-line" style="font-size:15px; color:#8b5cf6; flex-shrink:0;"></i>`;
+    } else if (wk.type === 'Outros') {
+        sportIcon = `<i class="ri-file-list-3-line" style="font-size:15px; color:#64748b; flex-shrink:0;"></i>`;
+    }
+
+    const wkDist = parseFloat(wk.metrics?.distance_value) || parseFloat(wk.distance) || null;
+    const wkRealDist = parseFloat(wk.metrics?.real_distance) || parseFloat(wk.real_distance) || null;
+    const distText = isCompleted 
+        ? `${wkRealDist ? wkRealDist.toFixed(1) : (wkDist ? wkDist.toFixed(1) : '0')}km` 
+        : (wkDist ? `${wkDist.toFixed(1)}km` : '');
+
+    return `
+        <div draggable="true" 
+             ondragstart="handleWorkoutDragStart(event, '${wk.id}')" 
+             onclick="handleCalendarWorkoutClick(event, '${wk.id}')" 
+             oncontextmenu="handleWorkoutContextMenu(event, '${wk.id}')"
+             class="workout-calendar-item workout-card-modern"
+             style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:6px 8px 8px 8px; display:flex; flex-direction:column; gap:4px; cursor:grab; position:relative; box-shadow:0 1px 3px rgba(0,0,0,0.03); transition:all 0.15s ease;"
+             title="${wk.title} ${distText ? `(${distText})` : ''}
+Clique para editar
+Arraste para mover/copiar (Ctrl)">
+            
+            <!-- Barra superior arredondada (Verde = Feito, Âmbar = Pendente) -->
+            <div style="width:100%; height:4px; background:${topBarColor}; border-radius:999px; margin-bottom:2px;"></div>
+            
+            <!-- Linha de ícone da modalidade + Três pontinhos cinzas -->
+            <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                <div style="display:flex; align-items:center;">
+                    ${sportIcon}
+                </div>
+                <div style="display:flex; align-items:center;">
+                    <i class="ri-more-2-fill workout-menu-dots" 
+                       onclick="event.stopPropagation(); handleWorkoutContextMenu(event, '${wk.id}')" 
+                       title="Opções do Treino" 
+                       style="color:#cbd5e1; font-size:14px; cursor:pointer; padding:1px; border-radius:4px; transition:color 0.15s;" 
+                       onmouseover="this.style.color='#64748b'" 
+                       onmouseout="this.style.color='#cbd5e1'"></i>
+                </div>
+            </div>
+
+            <!-- Título em negrito escuro (ex: Rodagem 7km (Noite)) -->
+            <div style="font-size:12px; font-weight:700; color:#1e293b; line-height:1.25; word-break:break-word; margin-top:1px;">
+                ${wk.title}
+            </div>
+
+            <!-- Ações rápidas no hover -->
+            <div class="workout-actions-overlay" style="display:none; gap:8px; align-items:center; justify-content:center; border-radius:4px; margin-top:4px; padding-top:4px; border-top:1px dashed #e2e8f0; width:100%;">
+                <i class="ri-file-copy-line" onclick="event.stopPropagation(); event.preventDefault(); quickDuplicateWorkout('${wk.id}')" title="Duplicar neste dia" style="cursor:pointer; font-size:12px; color:#f59e0b;"></i>
+                <i class="ri-send-plane-line" onclick="event.stopPropagation(); event.preventDefault(); openSendWorkoutToAthleteModal('${wk.id}')" title="Copiar p/ Outro Aluno" style="cursor:pointer; font-size:12px; color:#3b82f6;"></i>
+                <i class="ri-folder-add-line" onclick="event.stopPropagation(); event.preventDefault(); openSendWorkoutToFolderModal('${wk.id}')" title="Salvar como Modelo" style="cursor:pointer; font-size:12px; color:#0891b2;"></i>
+                <i class="ri-delete-bin-line btn-icon-danger" onclick="event.stopPropagation(); event.preventDefault(); quickDeleteWorkout('${wk.id}')" title="Excluir" style="cursor:pointer; font-size:12px; color:#ef4444;"></i>
+            </div>
+        </div>
+    `;
+}
+
+function renderWeeklySummaryCardHtml(weekIndex, weekDayCells, athleteVam) {
+    const weekLabel = `SEM. ${weekIndex + 1}`;
+    
+    let totalDist = 0;
+    let completedDist = 0;
+    let totalDuration = 0;
+    let completedDuration = 0;
+    let workoutCount = 0;
+    let completedCount = 0;
+
+    weekDayCells.forEach(cell => {
+        if (cell && cell.workouts) {
+            cell.workouts.forEach(wk => {
+                workoutCount++;
+                const dist = parseFloat(wk.metrics?.distance_value) || parseFloat(wk.distance) || 0;
+                totalDist += dist;
+                const plannedDur = getWorkoutPlannedDuration(wk, athleteVam);
+                totalDuration += plannedDur;
+
+                if (wk.status === 'completed') {
+                    completedCount++;
+                    const realDist = parseFloat(wk.metrics?.real_distance) || parseFloat(wk.real_distance) || dist;
+                    completedDist += realDist;
+
+                    let realDur = wk.metrics?.real_duration;
+                    if (!realDur) {
+                        const realDistVal = parseFloat(wk.metrics?.real_distance) || parseFloat(wk.real_distance);
+                        const realPaceStr = wk.metrics?.real_pace || wk.real_pace;
+                        if (realDistVal > 0 && realPaceStr) {
+                            const realPaceMins = parsePaceToMinutes(realPaceStr);
+                            if (realPaceMins > 0) realDur = realDistVal * realPaceMins;
+                        }
+                    }
+                    if (!realDur) realDur = plannedDur;
+                    completedDuration += realDur;
+                }
+            });
+        }
+    });
+
+    if (workoutCount === 0) {
+        return `
+            <div class="calendar-weekly-sum-box" 
+                 style="height:100%; min-height:0; background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:12px 8px; display:flex; flex-direction:column; justify-content:space-between; align-items:center; text-align:center; transition:all 0.15s;">
+                <span style="font-size:11px; font-weight:800; color:#1d4ed8; text-transform:uppercase; letter-spacing:0.5px;">${weekLabel}</span>
+                
+                <span style="font-size:18px; font-weight:600; color:#94a3b8; margin:auto 0;">--</span>
+                
+                <span style="font-size:10px; font-weight:800; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px;">SEM TREINO</span>
+            </div>
+        `;
+    }
+
+    const durToShow = completedDuration > 0 ? completedDuration : totalDuration;
+    const durText = durToShow > 0 ? formatWeeklyDurationText(durToShow) : '';
+    const distToShow = totalDist > 0 ? totalDist : completedDist;
+
+    return `
+        <div class="calendar-weekly-sum-box" 
+             style="height:100%; min-height:0; background:#ffffff; border:1px solid #bfdbfe; border-radius:14px; padding:12px 10px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.15s; box-shadow:0 1px 3px rgba(0,0,0,0.02);">
+            
+            <!-- Topo: SEM. X + Badge azul de contagem (ex: 6x) -->
+            <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                <span style="font-size:11.5px; font-weight:800; color:#1d4ed8; text-transform:uppercase; letter-spacing:0.5px;">${weekLabel}</span>
+                <span style="background:#1d4ed8; color:#ffffff; font-size:10px; font-weight:800; border-radius:999px; padding:1px 7px; line-height:1.4;">${workoutCount}x</span>
+            </div>
+
+            <!-- Meio: Distância em destaque + Tempo total -->
+            <div style="display:flex; flex-direction:column; align-items:center; text-align:center; margin:8px 0; gap:2px;">
+                <div style="display:flex; align-items:baseline; justify-content:center; gap:3px;">
+                    <span style="font-size:22px; font-weight:800; color:#0f172a; line-height:1.1;">${distToShow.toFixed(1)}</span>
+                    <span style="font-size:13.5px; font-weight:800; color:#1d4ed8;">km</span>
+                </div>
+                ${durText ? `<span style="font-size:11.5px; font-weight:700; color:#334155; margin-top:2px;">${durText}</span>` : ''}
+            </div>
+
+            <!-- Base: Status de conclusão (ex: 1/6 FEITO em verde) -->
+            <div style="display:flex; justify-content:center; align-items:center; width:100%;">
+                <span style="font-size:10.5px; font-weight:800; color:${completedCount > 0 ? '#00b074' : '#64748b'}; letter-spacing:0.5px; text-transform:uppercase;">
+                    ${completedCount}/${workoutCount} FEITO
+                </span>
+            </div>
+        </div>
+    `;
+}
+
+// ─── Tabela de Ritmos (VAM) Interativa no Calendário ────────────────────────
+function toggleHistoryVamTable() {
+    historyVamTableVisible = !historyVamTableVisible;
+    const container = $('history-vam-table-container');
+    const btnText = $('vam-table-toggle-text');
+    const btn = $('btn-toggle-vam-table');
+    if (!container) return;
+    
+    if (historyVamTableVisible) {
+        container.style.display = 'flex';
+        if (btnText) btnText.textContent = 'Ocultar Tabela VAM';
+        if (btn) {
+            btn.style.background = '#1d4ed8';
+            btn.style.color = '#ffffff';
+            btn.style.borderColor = '#1d4ed8';
+        }
+        renderHistoryVamTable();
+    } else {
+        container.style.display = 'none';
+        if (btnText) btnText.textContent = 'Tabela de Ritmos (VAM)';
+        if (btn) {
+            btn.style.background = '#eff6ff';
+            btn.style.color = '#1d4ed8';
+            btn.style.borderColor = '#bfdbfe';
+        }
+    }
+}
+
+function renderHistoryVamTable() {
+    const infoEl = $('vam-panel-athlete-info');
+    const contentEl = $('vam-panel-content');
+    if (!contentEl) return;
+
+    const athlete = athletes.find(x => x.id == currentHistoryAthleteId);
+    let vam = 12.0;
+    if (athlete) {
+        if (athlete.testTime && athlete.testTime > 0) {
+            vam = 180 / athlete.testTime;
+        } else if (athlete.vam) {
+            vam = parseFloat(athlete.vam) || 12.0;
+        }
+    }
+
+    if (infoEl) {
+        const testText = athlete?.testTime ? `${athlete.testTime} min (3km)` : 'Padrão VAM';
+        infoEl.innerHTML = `<span style="color:#1d4ed8; font-weight:800;">VAM: ${vam.toFixed(1)} km/h</span> • <span>${testText}</span>`;
+    }
+
+    // Intervalos mais usados em treinos de corrida (100m a 3000m)
+    const intervals = [
+        { label: '100 m', meters: 100, pct: 135 },
+        { label: '200 m', meters: 200, pct: 130 },
+        { label: '300 m', meters: 300, pct: 127 },
+        { label: '400 m', meters: 400, pct: 125 },
+        { label: '500 m', meters: 500, pct: 123 },
+        { label: '600 m', meters: 600, pct: 122 },
+        { label: '800 m', meters: 800, pct: 120 },
+        { label: '1.000 m', meters: 1000, pct: 115 },
+        { label: '1.200 m', meters: 1200, pct: 112 },
+        { label: '1.600 m', meters: 1600, pct: 108 },
+        { label: '2.000 m', meters: 2000, pct: 105 },
+        { label: '3.000 m (100%)', meters: 3000, pct: 100 },
+    ];
+
+    // Provas & Rodagens
+    const races = [
+        { label: '5 km', distKm: 5, pct: 97 },
+        { label: '10 km', distKm: 10, pct: 93 },
+        { label: '15 km', distKm: 15, pct: 90 },
+        { label: '21.1 km (Meia)', distKm: 21.0975, pct: 88 },
+        { label: '42.2 km (Maratona)', distKm: 42.195, pct: 82 },
+        { label: 'Rodagem Z2', distKm: 10, pct: 75 },
+        { label: 'Regenerativo', distKm: 6, pct: 65 }
+    ];
+
+    const formatPaceTime = (seconds) => {
+        if (!seconds || isNaN(seconds) || seconds <= 0) return '--';
+        const totalSec = Math.round(seconds);
+        const m = Math.floor(totalSec / 60);
+        const s = totalSec % 60;
+        return m > 0 ? `${m}m ${s.toString().padStart(2, '0')}s` : `${s}s`;
+    };
+
+    contentEl.innerHTML = `
+        <!-- Tiros Curtos (100m a 3000m) -->
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden;">
+            <div style="background:#0f172a; padding:8px 12px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; font-weight:800; color:#ffffff; text-transform:uppercase; letter-spacing:0.5px;">Tiros Curtos (Metros)</span>
+                <span style="font-size:10px; font-weight:700; color:#94a3b8;">Tempo do Tiro</span>
+            </div>
+            <table style="width:100%; border-collapse:collapse; font-size:11.5px;">
+                <thead>
+                    <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0; color:#64748b; font-size:10px; text-transform:uppercase;">
+                        <th style="padding:6px 10px; text-align:left; font-weight:700;">Dist.</th>
+                        <th style="padding:6px 6px; text-align:center; font-weight:700;">% VAM</th>
+                        <th style="padding:6px 8px; text-align:center; font-weight:700;">Pace/km</th>
+                        <th style="padding:6px 10px; text-align:right; font-weight:800; color:#0f172a;">Tempo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${intervals.map((item, idx) => {
+                        const spd = vam * (item.pct / 100);
+                        const pace = vamToPace(spd);
+                        const secPerKm = 3600 / spd;
+                        const tiroSeconds = (item.meters / 1000) * secPerKm;
+                        const isCommon = [400, 800, 1000].includes(item.meters);
+                        const rowBg = isCommon ? 'rgba(37,99,235,0.06)' : (idx % 2 === 0 ? '#ffffff' : '#f8fafc');
+                        const distColor = isCommon ? '#1d4ed8' : '#1e293b';
+                        const timeColor = isCommon ? '#1d4ed8' : '#0f172a';
+                        
+                        return `
+                            <tr style="background:${rowBg}; border-bottom:1px solid #f1f5f9;">
+                                <td style="padding:6px 10px; font-weight:700; color:${distColor};">${item.label}</td>
+                                <td style="padding:6px 6px; text-align:center; font-weight:700; color:#ef4444;">${item.pct}%</td>
+                                <td style="padding:6px 8px; text-align:center; font-weight:600; color:#475569;">${pace}</td>
+                                <td style="padding:6px 10px; text-align:right; font-weight:800; color:${timeColor};">${formatPaceTime(tiroSeconds)}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Provas & Rodagens -->
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden;">
+            <div style="background:#1e293b; padding:8px 12px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:11px; font-weight:800; color:#ffffff; text-transform:uppercase; letter-spacing:0.5px;">Provas & Rodagens (Km)</span>
+                <span style="font-size:10px; font-weight:700; color:#94a3b8;">Tempo Est.</span>
+            </div>
+            <table style="width:100%; border-collapse:collapse; font-size:11.5px;">
+                <thead>
+                    <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0; color:#64748b; font-size:10px; text-transform:uppercase;">
+                        <th style="padding:6px 10px; text-align:left; font-weight:700;">Distância</th>
+                        <th style="padding:6px 6px; text-align:center; font-weight:700;">% VAM</th>
+                        <th style="padding:6px 8px; text-align:center; font-weight:700;">Pace/km</th>
+                        <th style="padding:6px 10px; text-align:right; font-weight:800; color:#0f172a;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${races.map((item, idx) => {
+                        const spd = vam * (item.pct / 100);
+                        const pace = vamToPace(spd);
+                        const totalHours = item.distKm / spd;
+                        const totalSec = Math.round(totalHours * 3600);
+                        const h = Math.floor(totalSec / 3600);
+                        const m = Math.floor((totalSec % 3600) / 60);
+                        const s = totalSec % 60;
+                        const estText = h > 0 ? `${h}h ${m}m ${s}s` : `${m}m ${s}s`;
+                        const rowBg = idx % 2 === 0 ? '#ffffff' : '#f8fafc';
+                        
+                        return `
+                            <tr style="background:${rowBg}; border-bottom:1px solid #f1f5f9;">
+                                <td style="padding:6px 10px; font-weight:700; color:#1e293b;">${item.label}</td>
+                                <td style="padding:6px 6px; text-align:center; font-weight:700; color:#2563eb;">${item.pct}%</td>
+                                <td style="padding:6px 8px; text-align:center; font-weight:600; color:#475569;">${pace}</td>
+                                <td style="padding:6px 10px; text-align:right; font-weight:800; color:#0f172a;">${estText}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
 function renderHistoryCalendar() {
     const container = $('history-calendar-container');
     if (!container) return;
@@ -1985,107 +2330,21 @@ function renderHistoryCalendar() {
             html += `
                 <div class="calendar-day-box" 
                      onclick="handleCalendarDayClick(event, '${cell.dateStr}')" 
-                     ondragover="event.preventDefault(); this.style.borderColor='var(--primary)';" 
-                     ondragleave="this.style.borderColor='${cell.isToday ? 'var(--primary)' : 'var(--border-strong)'}';" 
-                     ondrop="this.style.borderColor='${cell.isToday ? 'var(--primary)' : 'var(--border-strong)'}'; handleWorkoutDrop(event, '${cell.dateStr}')"
-                     style="height:100%; min-height:300px; background:var(--bg); border: 1px solid ${cell.isToday ? 'var(--primary)' : 'var(--border-strong)'}; border-radius:10px; padding:8px; display:flex; flex-direction:column; gap:6px; cursor:pointer; transition:all 0.15s; position:relative; overflow:hidden;">
+                     ondragover="event.preventDefault(); this.style.borderColor='#1d4ed8';" 
+                     ondragleave="this.style.borderColor='${cell.isToday ? '#1d4ed8' : '#e8ecf4'}';" 
+                     ondrop="this.style.borderColor='${cell.isToday ? '#1d4ed8' : '#e8ecf4'}'; handleWorkoutDrop(event, '${cell.dateStr}')"
+                     style="height:100%; min-height:300px; background:#ffffff; border: 1px solid ${cell.isToday ? '#1d4ed8' : '#e8ecf4'}; border-radius:10px; padding:8px; display:flex; flex-direction:column; gap:6px; cursor:pointer; transition:all 0.15s; position:relative; overflow:hidden;">
                     
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-shrink:0; border-bottom:1px solid var(--border-strong); padding-bottom:4px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-shrink:0; border-bottom:1px solid #e8ecf4; padding-bottom:6px;">
                         <div style="display:flex; flex-direction:column;">
-                            <span style="font-size:9px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">${label}</span>
-                            <span style="font-size:16px; font-weight:800; color:${cell.isToday ? 'var(--primary)' : 'var(--text)'};">${cell.dayNum}</span>
+                            <span style="font-size:10px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">${label}</span>
+                            <span style="font-size:16px; font-weight:800; color:${cell.isToday ? '#1d4ed8' : '#1e293b'};">${cell.dayNum}</span>
                         </div>
-                        ${cell.isToday ? `<span style="width:5px; height:5px; background:var(--primary); border-radius:50%;"></span>` : ''}
+                        ${cell.isToday ? `<span style="font-size:10px; font-weight:800; color:#1d4ed8; background:rgba(29,78,216,0.1); padding:2px 6px; border-radius:4px;">HOJE</span>` : ''}
                     </div>
                     
-                    <div style="flex:1; display:flex; flex-direction:column; gap:4px; overflow-y:auto; min-height:0; margin-top:2px;">
-                        ${cell.workouts.map(wk => {
-                            const isCompleted = wk.status === 'completed';
-                            const wkDist = parseFloat(wk.metrics?.distance_value) || parseFloat(wk.distance) || null;
-                            const wkRealDist = parseFloat(wk.metrics?.real_distance) || parseFloat(wk.real_distance) || null;
-                            const metricText = isCompleted 
-                                ? `${wkRealDist ? wkRealDist.toFixed(1) : (wkDist ? wkDist.toFixed(1) : '0')}km` 
-                                : `${wkDist ? wkDist.toFixed(1) : '—'}km`;
-
-                            const plannedDur = getWorkoutPlannedDuration(wk, athleteVam);
-                            let realDur = null;
-                            if (isCompleted) {
-                                realDur = wk.metrics?.real_duration;
-                                if (!realDur) {
-                                    const realDistVal = parseFloat(wk.metrics?.real_distance) || parseFloat(wk.real_distance);
-                                    const realPaceStr = wk.metrics?.real_pace || wk.real_pace;
-                                    if (realDistVal > 0 && realPaceStr) {
-                                        const realPaceMins = parsePaceToMinutes(realPaceStr);
-                                        if (realPaceMins > 0) realDur = realDistVal * realPaceMins;
-                                    }
-                                }
-                                if (!realDur) realDur = plannedDur;
-                            }
-                            const durationText = isCompleted
-                                ? (realDur ? formatDurationFromMinutes(realDur) : '')
-                                : (plannedDur ? formatDurationFromMinutes(plannedDur) : '');
-
-                            let badgeBg = '#fff9c4'; 
-                            let borderStroke = '#fdd835'; 
-                            let textColor = '#1e293b'; 
-                            let typeIcon = '<i class="ri-run-line" style="font-size:12px;"></i>';
-
-                            if (wk.type === 'Natação') {
-                                badgeBg = '#e0f2fe'; borderStroke = '#7dd3fc'; textColor = '#0369a1';
-                                typeIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:2px;"><path d="M2 21v-2q.95 0 1.425-.5T5.3 18t1.925.5t1.425.5t1.425-.5T12 18t1.925.5t1.425.5t1.425-.5T18.7 18t1.875.5T22 19v2q-1.475 0-1.937-.5T18.7 20t-1.425.5t-1.925.5t-1.925-.5T12 20t-1.425.5t-1.925.5t-1.925-.5T5.3 20t-1.363.5T2 21m0-4.5v-2q.95 0 1.425-.5t1.875-.5t1.938.5t1.412.5q.9 0 1.425-.5T12 13.5t1.925.5t1.425.5t1.425-.5t1.925-.5t1.875.5t1.425.5v2q-1.475 0-1.937-.5t-1.363-.5t-1.388.5t-1.962.5q-1.425 0-1.937-.5T12 15.5q-.95 0-1.412.5t-1.938.5t-1.963-.5t-1.387-.5t-1.362.5T2 16.5m4.9-5.1l3.325-3.325l-1-1q-.825-.825-1.75-1.2T5.2 5.5V3q1.875 0 3.1.413T10.7 5l6.4 6.4q-.425.275-.825.438T15.35 12q-.9 0-1.425-.5T12 11t-1.925.5t-1.425.5q-.525 0-.925-.162T6.9 11.4m11.575-7.663q.725.738.725 1.763q0 1.05-.725 1.775T16.7 8t-1.775-.725T14.2 5.5q0-1.025.725-1.763T16.7 3t1.775.738"/></svg>';
-                            } else if (wk.type === 'Ciclismo') {
-                                badgeBg = '#ecfdf5'; borderStroke = '#6ee7b7'; textColor = '#047857';
-                                typeIcon = '<i class="ri-riding-line" style="font-size:12px;"></i>';
-                            } else if (wk.type === 'Fortalecimento') {
-                                badgeBg = '#f5f3ff'; borderStroke = '#c084fc'; textColor = '#6d28d9';
-                                typeIcon = '<i class="ri-focus-3-line" style="font-size:12px;"></i>';
-                            } else if (wk.type === 'Outros') {
-                                badgeBg = '#f8fafc'; borderStroke = '#cbd5e1'; textColor = '#475569';
-                                typeIcon = '<i class="ri-file-list-3-line" style="font-size:12px;"></i>';
-                            }
-
-                            if (isCompleted) {
-                                borderStroke = '#10b981';
-                                typeIcon = '<i class="ri-checkbox-circle-fill" style="font-size:12px; color:#10b981;"></i>';
-                            }
-
-                            return `
-                                <div draggable="true" 
-                                     ondragstart="handleWorkoutDragStart(event, '${wk.id}')" 
-                                     onclick="handleCalendarWorkoutClick(event, '${wk.id}')" 
-                                     oncontextmenu="handleWorkoutContextMenu(event, '${wk.id}')"
-                                     class="workout-calendar-item"
-                                     style="background:${badgeBg}; color:${textColor}; padding:6px 8px; border-radius:6px; font-size:11px; font-weight:500; display:flex; flex-direction:column; gap:2px; border:1px solid ${borderStroke}; cursor:grab; position:relative; box-shadow:0 1px 3px rgba(0,0,0,0.05); transition:all 0.15s;" 
-                                     title="Clique para editar\nArraste para mover/copiar (Ctrl)\nBotão direito para copiar/excluir\n\n${wk.title}\n${wk.description || ''}">
-                                    
-                                    <div style="display:flex; align-items:center; gap:4px; width:100%;">
-                                        <span style="display:inline-flex; align-items:center; opacity:0.8;">${typeIcon}</span>
-                                        <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; font-weight:600;">${wk.title}</span>
-                                    </div>
-
-                                    <div class="workout-metric-text" style="font-size:9.5px; opacity:0.9; display:flex; align-items:center; flex-wrap:wrap; gap:4px; font-weight:500; margin-top:2px;">
-                                        ${isCompleted ? `
-                                            <span style="font-weight:800; color:#10b981; display:inline-flex; align-items:center; gap:2px;">
-                                                <i class="ri-check-line" style="font-size:11px;"></i> Real: ${metricText}
-                                            </span>
-                                            ${wkDist ? `<span style="opacity:0.6; font-size:9px;">(Plan: ${wkDist.toFixed(1)}km)</span>` : ''}
-                                            ${wk.metrics?.real_pace ? `<span style="background:rgba(16,185,129,0.12); color:#10b981; padding:1px 4px; border-radius:3px; font-weight:700; font-size:9px;">@ ${wk.metrics.real_pace}</span>` : ''}
-                                            <span style="font-size:8.5px; background:${wk.metrics?.sync_source === 'Garmin' ? 'rgba(0,122,255,0.12)' : 'rgba(252,76,2,0.12)'}; color:${wk.metrics?.sync_source === 'Garmin' ? '#007aff' : '#fc4c02'}; padding:1px 4px; border-radius:3px; font-weight:800;">${wk.metrics?.sync_source || 'Relógio'}</span>
-                                        ` : `
-                                            <span>${metricText}</span>
-                                            ${durationText ? `<span style="display:flex; align-items:center; gap:2px; opacity:0.8;"><i class="ri-time-line" style="font-size:10px;"></i> ${durationText}</span>` : ''}
-                                        `}
-                                    </div>
-
-                                    <div class="workout-actions-overlay" style="display:none; gap:10px; align-items:center; justify-content:center; border-radius:4px; margin-top:2px; width:100%;">
-                                        <i class="ri-file-copy-line" onclick="event.stopPropagation(); event.preventDefault(); quickDuplicateWorkout('${wk.id}')" title="Duplicar neste dia" style="cursor:pointer; font-size:12px; color:#f59e0b;"></i>
-                                        <i class="ri-send-plane-line" onclick="event.stopPropagation(); event.preventDefault(); openSendWorkoutToAthleteModal('${wk.id}')" title="Copiar p/ Outro Aluno" style="cursor:pointer; font-size:12px; color:#3b82f6;"></i>
-                                        <i class="ri-folder-add-line" onclick="event.stopPropagation(); event.preventDefault(); openSendWorkoutToFolderModal('${wk.id}')" title="Salvar como Modelo" style="cursor:pointer; font-size:12px; color:#0891b2;"></i>
-                                        <i class="ri-delete-bin-line btn-icon-danger" onclick="event.stopPropagation(); event.preventDefault(); quickDeleteWorkout('${wk.id}')" title="Excluir" style="cursor:pointer; font-size:12px;"></i>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('')}
+                    <div style="flex:1; display:flex; flex-direction:column; gap:6px; overflow-y:auto; min-height:0; margin-top:2px;">
+                        ${cell.workouts.map(wk => renderModernWorkoutCardHtml(wk, athleteVam)).join('')}
                     </div>
                 </div>
             `;
@@ -2276,10 +2535,10 @@ function renderHistoryCalendar() {
         const numRows = totalCellsCount / 7;
         
         html += `
-            <div class="calendar-grid" style="display:grid; grid-template-columns: repeat(7, 1fr) 90px; grid-template-rows: auto repeat(${numRows}, 1fr); gap:6px; flex:1; min-height:0;">
+            <div class="calendar-grid-seamless" style="display:grid; grid-template-columns: repeat(7, 1fr) 115px; grid-template-rows: auto repeat(${numRows}, minmax(130px, 1fr)); border-top:1px solid #eef2f6; border-left:1px solid #eef2f6; flex:1; min-height:0; overflow-y:auto; background:#ffffff;">
                 <!-- Headers da semana -->
-                ${["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom", "Soma"].map(d => `
-                    <div style="text-align:center; font-weight:700; font-size:12px; color:${d === 'Soma' ? 'var(--primary)' : 'var(--text-muted)'}; padding:4px 0; border-bottom:2px solid var(--border-strong);">
+                ${["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom", ""].map((d, i) => `
+                    <div style="text-align:center; font-weight:700; font-size:12px; color:#64748b; padding:8px 0; border-right:1px solid #eef2f6; border-bottom:1px solid #eef2f6; background:#ffffff;">
                         ${d}
                     </div>
                 `).join('')}
@@ -2309,173 +2568,53 @@ function renderHistoryCalendar() {
         for (let w = 0; w < numRows; w++) {
             for (let d = 0; d < 7; d++) {
                 const cell = dayCells[w * 7 + d];
-                if (!cell.isCurrentMonth) {
-                    html += `
-                        <div style="height:100%; min-height:0; background:var(--bg); border:1px solid var(--border-strong); border-radius:8px; padding:6px; opacity:0.35; cursor:not-allowed; overflow:hidden;">
-                            <span style="font-size:11px; font-weight:600; color:var(--text-muted);">${cell.dayNum}</span>
+                
+                // Cabeçalho do dia: HOJE tem círculo azul sólido com número 30 em branco + texto HOJE ao lado; outros dias têm número limpo no topo-esquerdo
+                let dayHeaderHtml = '';
+                if (cell.isToday) {
+                    dayHeaderHtml = `
+                        <div style="display:flex; justify-content:space-between; align-items:center; width:100%; flex-shrink:0;">
+                            <div style="width:26px; height:26px; border-radius:50%; background:#1d4ed8; color:#ffffff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; box-shadow:0 2px 5px rgba(29,78,216,0.3);">
+                                ${cell.dayNum}
+                            </div>
+                            <span style="font-size:11px; font-weight:800; color:#1d4ed8; letter-spacing:0.5px;">HOJE</span>
                         </div>
                     `;
                 } else {
-                    html += `
-                        <div class="calendar-day-box" 
-                             onclick="handleCalendarDayClick(event, '${cell.dateStr}')" 
-                             ondragover="event.preventDefault(); this.style.borderColor='var(--primary)';" 
-                             ondragleave="this.style.borderColor='${cell.isToday ? 'var(--primary)' : 'var(--border-strong)'}';" 
-                             ondrop="this.style.borderColor='${cell.isToday ? 'var(--primary)' : 'var(--border-strong)'}'; handleWorkoutDrop(event, '${cell.dateStr}')"
-                             style="height:100%; min-height:0; background:var(--bg); border: 1px solid ${cell.isToday ? 'var(--primary)' : 'var(--border-strong)'}; border-radius:8px; padding:6px; display:flex; flex-direction:column; gap:4px; cursor:pointer; transition:all 0.15s; position:relative; overflow:hidden;">
-                            <div style="display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
-                                <span style="font-size:11px; font-weight:600; color:${cell.isToday ? 'var(--primary)' : 'var(--text)'};">${cell.dayNum}</span>
-                                ${cell.isToday ? `<span style="width:5px; height:5px; background:var(--primary); border-radius:50%;"></span>` : ''}
-                            </div>
-                            
-                            <div style="flex:1; display:flex; flex-direction:column; gap:4px; overflow-y:auto; min-height:0; margin-top:2px;">
-                                ${cell.workouts.map(wk => {
-                                    const isCompleted = wk.status === 'completed';
-                                    const wkDist = parseFloat(wk.metrics?.distance_value) || parseFloat(wk.distance) || null;
-                                    const wkRealDist = parseFloat(wk.metrics?.real_distance) || parseFloat(wk.real_distance) || null;
-                                    const metricText = isCompleted 
-                                        ? `${wkRealDist ? wkRealDist.toFixed(1) : (wkDist ? wkDist.toFixed(1) : '0')}km` 
-                                        : `${wkDist ? wkDist.toFixed(1) : '—'}km`;
-
-                                    const plannedDur = getWorkoutPlannedDuration(wk, athleteVam);
-                                    let realDur = null;
-                                    if (isCompleted) {
-                                        realDur = wk.metrics?.real_duration;
-                                        if (!realDur) {
-                                            const realDistVal = parseFloat(wk.metrics?.real_distance) || parseFloat(wk.real_distance);
-                                            const realPaceStr = wk.metrics?.real_pace || wk.real_pace;
-                                            if (realDistVal > 0 && realPaceStr) {
-                                                const realPaceMins = parsePaceToMinutes(realPaceStr);
-                                                if (realPaceMins > 0) realDur = realDistVal * realPaceMins;
-                                            }
-                                        }
-                                        if (!realDur) realDur = plannedDur;
-                                    }
-                                    const durationText = isCompleted
-                                        ? (realDur ? formatDurationFromMinutes(realDur) : '')
-                                        : (plannedDur ? formatDurationFromMinutes(plannedDur) : '');
-
-                                    let badgeBg = '#fff9c4'; 
-                                    let borderStroke = '#fdd835'; 
-                                    let textColor = '#1e293b'; 
-                                    let typeIcon = '<i class="ri-run-line" style="font-size:12px;"></i>';
-
-                                    if (wk.type === 'Natação') {
-                                        badgeBg = '#e0f2fe'; borderStroke = '#7dd3fc'; textColor = '#0369a1';
-                                        typeIcon = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-right:2px;"><path d="M2 21v-2q.95 0 1.425-.5T5.3 18t1.925.5t1.425.5t1.425-.5T12 18t1.925.5t1.425.5t1.425-.5T18.7 18t1.875.5T22 19v2q-1.475 0-1.937-.5T18.7 20t-1.425.5t-1.925.5t-1.925-.5T12 20t-1.425.5t-1.925.5t-1.925-.5T5.3 20t-1.363.5T2 21m0-4.5v-2q.95 0 1.425-.5t1.875-.5t1.938.5t1.412.5q.9 0 1.425-.5T12 13.5t1.925.5t1.425.5t1.425-.5t1.925-.5t1.875.5t1.425.5v2q-1.475 0-1.937-.5t-1.363-.5t-1.388.5t-1.962.5q-1.425 0-1.937-.5T12 15.5q-.95 0-1.412.5t-1.938.5t-1.963-.5t-1.387-.5t-1.362.5T2 16.5m4.9-5.1l3.325-3.325l-1-1q-.825-.825-1.75-1.2T5.2 5.5V3q1.875 0 3.1.413T10.7 5l6.4 6.4q-.425.275-.825.438T15.35 12q-.9 0-1.425-.5T12 11t-1.925.5t-1.425.5q-.525 0-.925-.162T6.9 11.4m11.575-7.663q.725.738.725 1.763q0 1.05-.725 1.775T16.7 8t-1.775-.725T14.2 5.5q0-1.025.725-1.763T16.7 3t1.775.738"/></svg>';
-                                    } else if (wk.type === 'Ciclismo') {
-                                        badgeBg = '#ecfdf5'; borderStroke = '#6ee7b7'; textColor = '#047857';
-                                        typeIcon = '<i class="ri-riding-line" style="font-size:12px;"></i>';
-                                    } else if (wk.type === 'Fortalecimento') {
-                                        badgeBg = '#f5f3ff'; borderStroke = '#c084fc'; textColor = '#6d28d9';
-                                        typeIcon = '<i class="ri-focus-3-line" style="font-size:12px;"></i>';
-                                    } else if (wk.type === 'Outros') {
-                                        badgeBg = '#f8fafc'; borderStroke = '#cbd5e1'; textColor = '#475569';
-                                        typeIcon = '<i class="ri-file-list-3-line" style="font-size:12px;"></i>';
-                                    }
-
-                                    if (isCompleted) {
-                                        borderStroke = '#10b981';
-                                        typeIcon = '<i class="ri-checkbox-circle-fill" style="font-size:12px; color:#10b981;"></i>';
-                                    }
-
-                                    return `
-                                        <div draggable="true" 
-                                             ondragstart="handleWorkoutDragStart(event, '${wk.id}')" 
-                                             onclick="handleCalendarWorkoutClick(event, '${wk.id}')" 
-                                             oncontextmenu="handleWorkoutContextMenu(event, '${wk.id}')"
-                                             class="workout-calendar-item"
-                                             style="background:${badgeBg}; color:${textColor}; padding:6px 8px; border-radius:6px; font-size:11px; font-weight:500; display:flex; flex-direction:column; gap:2px; border:1px solid ${borderStroke}; cursor:grab; position:relative; box-shadow:0 1px 2px rgba(0,0,0,0.03); transition:all 0.15s;" 
-                                             title="${wk.title}">
-                                            
-                                            <div style="display:flex; align-items:center; gap:4px; width:100%;">
-                                                <span style="display:inline-flex; align-items:center; opacity:0.8;">${typeIcon}</span>
-                                                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; font-weight:800;">${wk.title}</span>
-                                            </div>
-
-                                            <div class="workout-metric-text" style="font-size:9.5px; opacity:0.9; display:flex; align-items:center; flex-wrap:wrap; gap:4px; font-weight:500; margin-top:2px;">
-                                                ${isCompleted ? `
-                                                    <span style="font-weight:800; color:#10b981; display:inline-flex; align-items:center; gap:2px;">
-                                                        <i class="ri-check-line" style="font-size:11px;"></i> Real: ${metricText}
-                                                    </span>
-                                                    ${wkDist ? `<span style="opacity:0.6; font-size:9px;">(Plan: ${wkDist.toFixed(1)}km)</span>` : ''}
-                                                    ${wk.metrics?.real_pace ? `<span style="background:rgba(16,185,129,0.12); color:#10b981; padding:1px 4px; border-radius:3px; font-weight:700; font-size:9px;">@ ${wk.metrics.real_pace}</span>` : ''}
-                                                    <span style="font-size:8.5px; background:${wk.metrics?.sync_source === 'Garmin' ? 'rgba(0,122,255,0.12)' : 'rgba(252,76,2,0.12)'}; color:${wk.metrics?.sync_source === 'Garmin' ? '#007aff' : '#fc4c02'}; padding:1px 4px; border-radius:3px; font-weight:800;">${wk.metrics?.sync_source || 'Relógio'}</span>
-                                                ` : `
-                                                    <span>${metricText}</span>
-                                                    ${durationText ? `<span style="display:flex; align-items:center; gap:2px; opacity:0.8;"><i class="ri-time-line" style="font-size:10px;"></i> ${durationText}</span>` : ''}
-                                                `}
-                                            </div>
-
-                                            <div class="workout-actions-overlay" style="display:none; gap:10px; align-items:center; justify-content:center; border-radius:4px; margin-top:2px; width:100%;">
-                                                <i class="ri-file-copy-line" onclick="event.stopPropagation(); event.preventDefault(); quickDuplicateWorkout('${wk.id}')" title="Duplicar neste dia" style="cursor:pointer; font-size:12px; color:#f59e0b;"></i>
-                                                <i class="ri-send-plane-line" onclick="event.stopPropagation(); event.preventDefault(); openSendWorkoutToAthleteModal('${wk.id}')" title="Copiar p/ Outro Aluno" style="cursor:pointer; font-size:12px; color:#3b82f6;"></i>
-                                                <i class="ri-folder-add-line" onclick="event.stopPropagation(); event.preventDefault(); openSendWorkoutToFolderModal('${wk.id}')" title="Salvar como Modelo" style="cursor:pointer; font-size:12px; color:#0891b2;"></i>
-                                                <i class="ri-delete-bin-line btn-icon-danger" onclick="event.stopPropagation(); event.preventDefault(); quickDeleteWorkout('${wk.id}')" title="Excluir" style="cursor:pointer; font-size:12px;"></i>
-                                            </div>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
+                    dayHeaderHtml = `
+                        <div style="display:flex; justify-content:flex-start; align-items:center; width:100%; flex-shrink:0;">
+                            <span style="font-size:14px; font-weight:700; color:${cell.isCurrentMonth ? '#334155' : '#cbd5e1'};">
+                                ${cell.dayNum}
+                            </span>
                         </div>
                     `;
                 }
-            }
-            
-            let plannedSum = 0;
-            let completedSum = 0;
-            let plannedDurationSum = 0;
-            let completedDurationSum = 0;
-            for (let d = 0; d < 7; d++) {
-                const cell = dayCells[w * 7 + d];
-                if (cell && cell.workouts) {
-                    cell.workouts.forEach(wk => {
-                        const dist = parseFloat(wk.metrics?.distance_value) || parseFloat(wk.distance) || 0;
-                        plannedSum += dist;
-                        const plannedDur = getWorkoutPlannedDuration(wk, athleteVam);
-                        plannedDurationSum += plannedDur;
-                        
-                        if (wk.status === 'completed') {
-                            const realDist = parseFloat(wk.metrics?.real_distance) || parseFloat(wk.real_distance) || dist;
-                            completedSum += realDist;
-                            
-                            let realDur = wk.metrics?.real_duration;
-                            if (!realDur) {
-                                const realDistVal = parseFloat(wk.metrics?.real_distance) || parseFloat(wk.real_distance);
-                                const realPaceStr = wk.metrics?.real_pace || wk.real_pace;
-                                if (realDistVal > 0 && realPaceStr) {
-                                    const realPaceMins = parsePaceToMinutes(realPaceStr);
-                                    if (realPaceMins > 0) realDur = realDistVal * realPaceMins;
-                                }
-                            }
-                            if (!realDur) realDur = plannedDur;
-                            completedDurationSum += realDur;
-                        }
-                    });
-                }
-            }
-            
-            const hasCompleted = completedSum > 0;
-            const plannedDurText = plannedDurationSum > 0 ? formatDurationFromMinutes(plannedDurationSum) : '';
-            const completedDurText = completedDurationSum > 0 ? formatDurationFromMinutes(completedDurationSum) : '';
 
-            html += `
-                <div class="calendar-weekly-sum-box" 
-                     style="height:100%; min-height:0; background:var(--panel); border:1px solid var(--border-strong); border-left:3px solid var(--primary); border-radius:8px; padding:6px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; transition:all 0.15s; gap:2px;">
-                    <span style="font-size:9px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px;">Soma</span>
-                    
-                    <div style="display:flex; flex-direction:column; gap:1px;">
-                        <span style="font-size:13px; font-weight:800; color:var(--text);">${plannedSum > 0 ? plannedSum.toFixed(1) + ' km' : '—'}</span>
-                        ${plannedDurText ? `<span style="font-size:10px; color:var(--text-muted); font-weight:600;"><i class="ri-time-line" style="font-size:9.5px;"></i> ${plannedDurText}</span>` : ''}
-                    </div>
-                    
-                    ${hasCompleted ? `
-                        <div style="width:80%; height:1px; background:var(--border-strong); margin:4px 0;"></div>
-                        <div style="display:flex; flex-direction:column; gap:1px;">
-                            <span style="font-size:11px; font-weight:800; color:var(--success);">✓ ${completedSum.toFixed(1)} km</span>
-                            ${completedDurText ? `<span style="font-size:9.5px; color:var(--success); font-weight:700;"><i class="ri-time-line" style="font-size:9px;"></i> ${completedDurText}</span>` : ''}
+                html += `
+                    <div class="calendar-day-box" 
+                         onclick="handleCalendarDayClick(event, '${cell.dateStr}')" 
+                         ondragover="event.preventDefault(); this.style.background='rgba(37,99,235,0.03)';" 
+                         ondragleave="this.style.background='${cell.isCurrentMonth ? '#ffffff' : '#fcfdfe'}';" 
+                         ondrop="this.style.background='${cell.isCurrentMonth ? '#ffffff' : '#fcfdfe'}'; handleWorkoutDrop(event, '${cell.dateStr}')"
+                         style="height:100%; min-height:125px; background:${cell.isCurrentMonth ? '#ffffff' : '#fcfdfe'}; border-right:1px solid #eef2f6; border-bottom:1px solid #eef2f6; padding:8px; display:flex; flex-direction:column; gap:6px; cursor:pointer; transition:all 0.15s; position:relative; overflow:hidden;">
+                        
+                        ${dayHeaderHtml}
+                        
+                        <div style="flex:1; display:flex; flex-direction:column; gap:6px; overflow-y:auto; min-height:0; margin-top:2px;">
+                            ${cell.workouts.map(wk => renderModernWorkoutCardHtml(wk, athleteVam)).join('')}
                         </div>
-                    ` : ''}
+                    </div>
+                `;
+            }
+            
+            // 8ª coluna: Resumo da semana (SEM. 1, SEM. 2, ...) em caixa na borda
+            const weekDayCells = [];
+            for (let d = 0; d < 7; d++) {
+                weekDayCells.push(dayCells[w * 7 + d]);
+            }
+            html += `
+                <div style="border-right:1px solid #eef2f6; border-bottom:1px solid #eef2f6; padding:6px; background:#ffffff; display:flex; flex-direction:column;">
+                    ${renderWeeklySummaryCardHtml(w, weekDayCells, athleteVam)}
                 </div>
             `;
         }
@@ -2490,28 +2629,23 @@ function renderHistoryCalendar() {
         styleEl.id = 'calendar-hover-styles';
         styleEl.innerHTML = `
             .calendar-day-box:hover {
-                transform: translateY(-2px);
-                border-color: var(--primary) !important;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-                background: var(--panel) !important;
+                border-color: #1d4ed8 !important;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             }
             .calendar-weekly-sum-box:hover {
-                transform: translateY(-2px);
-                border-color: var(--primary) !important;
-                border-style: solid !important;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-                background: var(--panel) !important;
+                box-shadow: 0 4px 12px rgba(29,78,216,0.08);
             }
-            .workout-calendar-item:hover {
-                box-shadow: 0 4px 10px rgba(0,0,0,0.08) !important;
+            .workout-card-modern:hover {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+                border-color: #cbd5e1 !important;
                 transform: translateY(-1px);
                 z-index: 10 !important;
             }
-            .workout-calendar-item:hover .workout-actions-overlay {
+            .workout-card-modern:hover .workout-actions-overlay {
                 display: flex !important;
             }
-            .workout-calendar-item:hover .workout-metric-text {
-                display: none !important;
+            .workout-menu-dots:hover {
+                background: #f1f5f9;
             }
             .mini-month-card:hover {
                 transform: translateY(-2px);
@@ -7967,15 +8101,7 @@ const TUTORIAL_CHAPTERS = [
 ];
 
 // ─── MODAL DE TUTORIAL (GUIA INTERATIVO) ───
-function openTutorialModal() {
-    const modal = $('modal-tutorial');
-    if (modal) modal.classList.add('show');
-}
-
-function closeTutorialModal() {
-    const modal = $('modal-tutorial');
-    if (modal) modal.classList.remove('show');
-}
+// (Funções openTutorialModal e closeTutorialModal declaradas acima)
 
 // Funções de compatibilidade com código legado
 function toggleTutorialSection() { openTutorialModal(); }
@@ -8588,7 +8714,8 @@ function showThematicTourStep(stepIndex) {
 //  BIBLIOTECA DE TREINOS ESTILO TRAININGPEAKS
 // ==========================================
 
-let historyLibraryVisible = true;
+let historyLibraryVisible = false;
+let historyVamTableVisible = false;
 let libraryExpandedFolders = {
     recentes: true,
     minha: false,
@@ -8680,7 +8807,6 @@ const preseededTemplates = [
         metrics: { distance: '16 km', duration: '1h 40m' }
     },
     {
-    {
         id: 't-run-frac-5k',
         title: 'Rodagem 7 km Fracionada (1km + 5x 1km + 1km)',
         type: 'run',
@@ -8763,13 +8889,22 @@ function initHistoryLibrary() {
     const container = $('history-library-container');
     if (!container) return;
     
-    // Set default visibility state
     if (historyLibraryVisible) {
         container.style.display = 'flex';
-        $('library-toggle-text').textContent = 'Ocultar Biblioteca';
+        if ($('library-toggle-text')) $('library-toggle-text').textContent = 'Ocultar Biblioteca';
+        if ($('btn-toggle-library')) {
+            $('btn-toggle-library').style.background = '#1d4ed8';
+            $('btn-toggle-library').style.color = '#ffffff';
+            $('btn-toggle-library').style.borderColor = '#1d4ed8';
+        }
     } else {
         container.style.display = 'none';
-        $('library-toggle-text').textContent = 'Mostrar Biblioteca';
+        if ($('library-toggle-text')) $('library-toggle-text').textContent = 'Biblioteca de Treinos';
+        if ($('btn-toggle-library')) {
+            $('btn-toggle-library').style.background = 'var(--panel)';
+            $('btn-toggle-library').style.color = 'var(--text)';
+            $('btn-toggle-library').style.borderColor = 'var(--border-strong)';
+        }
     }
     
     renderLibraryTemplates();

@@ -11,7 +11,7 @@
     <!-- html2canvas REMOVIDO -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <base href="/professor/">
-    <link rel="stylesheet" href="style.css?v=5.8">
+    <link rel="stylesheet" href="style.css?v=5.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -624,8 +624,11 @@
         <div class="modal-card modal-xl" style="max-width: 100vw; width: 100vw; height: 100vh; max-height: 100vh; margin: 0; display: flex; flex-direction: column; border-radius: 0; overflow: hidden; border: none; box-shadow: none;">
             <div class="modal-header" style="flex-shrink: 0; padding: 12px 24px; border-bottom: 1px solid var(--border-strong); display: flex; justify-content: space-between; align-items: center;">
                 <h3 style="display:flex; align-items:center; gap:8px; font-weight: 800; font-size: 18px; margin: 0;"><i class="ri-calendar-2-line" style="color:var(--primary);"></i> Calendário de Treinos: <span id="hist-athlete-name" style="color: var(--primary);"></span></h3>
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <button class="btn btn-secondary" onclick="toggleHistoryLibrary()" style="font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; padding: 8px 14px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button class="btn btn-secondary" onclick="toggleHistoryVamTable()" id="btn-toggle-vam-table" style="font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px; border: 1px solid #bfdbfe; background: #eff6ff; color: #1d4ed8; cursor: pointer; transition: all 0.15s;">
+                        <i class="ri-speed-up-line"></i> <span id="vam-table-toggle-text">Tabela de Ritmos (VAM)</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="toggleHistoryLibrary()" id="btn-toggle-library" style="font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border-strong); background: var(--panel); color: var(--text); cursor: pointer; transition: all 0.15s;">
                         <i class="ri-book-open-line"></i> <span id="library-toggle-text">Biblioteca de Treinos</span>
                     </button>
                     <button class="btn-close" onclick="closeModals()" style="margin: 0;"><i class="ri-close-line"></i></button>
@@ -633,10 +636,24 @@
             </div>
             <div class="modal-body" style="background:var(--bg); padding:12px; display:flex; gap:12px; flex:1; min-height:0; overflow:hidden;">
                 <!-- Coluna da Esquerda: Calendário Interativo Expandido -->
-                <div id="history-calendar-container" style="flex:1; background:var(--panel); border-radius:12px; border:1px solid var(--border-strong); padding:16px; box-shadow:0 4px 6px rgba(0,0,0,0.02); display:flex; flex-direction:column; height:100%; min-height:0; overflow:hidden;"></div>
+                <div id="history-calendar-container" style="flex:1; background:#ffffff; border-radius:12px; border:1px solid var(--border-strong); padding:14px; box-shadow:0 4px 6px rgba(0,0,0,0.02); display:flex; flex-direction:column; height:100%; min-height:0; overflow:hidden;"></div>
                 
-                <!-- Coluna da Direita: Biblioteca de Treinos Estilo TrainingPeaks -->
-                <div id="history-library-container" style="width:320px; background:var(--panel); border-radius:12px; border:1px solid var(--border-strong); padding:16px; box-shadow:0 4px 6px rgba(0,0,0,0.02); display:flex; flex-direction:column; height:100%; min-height:0; overflow:hidden; transition: all 0.3s ease;">
+                <!-- Painel Ocultável: Tabela de Ritmos por Distância (VAM) -->
+                <div id="history-vam-table-container" style="display:none; width:340px; background:#ffffff; border-radius:12px; border:1px solid var(--border-strong); padding:16px; box-shadow:0 4px 6px rgba(0,0,0,0.02); flex-direction:column; height:100%; min-height:0; overflow-y:auto; transition: all 0.25s ease; flex-shrink:0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+                        <div>
+                            <h4 style="font-weight:800; font-size:14px; margin:0; color:#0f172a; display:flex; align-items:center; gap:6px;">
+                                <i class="ri-speed-up-line" style="color:#1d4ed8;"></i> Tabela de Ritmos (VAM)
+                            </h4>
+                            <span id="vam-panel-athlete-info" style="font-size:11px; font-weight:600; color:#64748b;">Carregando dados...</span>
+                        </div>
+                        <button onclick="toggleHistoryVamTable()" style="border:none; background:transparent; cursor:pointer; font-size:18px; color:#94a3b8; padding:2px;"><i class="ri-close-line"></i></button>
+                    </div>
+                    <div id="vam-panel-content" style="display:flex; flex-direction:column; gap:14px;"></div>
+                </div>
+                
+                <!-- Coluna da Direita: Biblioteca de Treinos (Começa FECHADA por padrão) -->
+                <div id="history-library-container" style="display:none; width:320px; background:#ffffff; border-radius:12px; border:1px solid var(--border-strong); padding:16px; box-shadow:0 4px 6px rgba(0,0,0,0.02); flex-direction:column; height:100%; min-height:0; overflow:hidden; transition: all 0.3s ease; flex-shrink:0;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                         <h4 style="font-weight: 800; font-size: 15px; margin: 0; color: var(--text);">Biblioteca de Treinos</h4>
                         <div style="position: relative; display: inline-block;">
@@ -1320,6 +1337,6 @@
     </div>
 
     <script src="auth.js?v=3.1"></script>
-    <script src="app.js?v=4.0"></script>
+    <script src="app.js?v=5.0"></script>
 </body>
 </html>
